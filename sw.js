@@ -4,6 +4,7 @@ const urlsToCache = [
     'index.html',
     'dashboard.html',
     'style.css',
+    'db.js',
     'app.js',
     'manifest.json',
     'assets/css/bootstrap.min.css',
