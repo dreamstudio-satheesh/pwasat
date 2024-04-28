@@ -40,31 +40,7 @@ async function login(email, password) {
 
 
 
-// Wait for the database to open successfully
-const dbRequest = indexedDB.open('satsweetsDB', 1);
 
-dbRequest.onsuccess = function(event) {
-    const db = event.target.result;
-
-    // Fetch and store categories in IndexedDB
-    fetchAndStoreData('https://app.satsweets.com/api/categories', 'categories', db);
-    
-    // Once categories are fetched and stored, display them
-    getAndDisplayCategories(db);
-};
-
-// Function to fetch and store data in IndexedDB
-function fetchAndStoreData(apiUrl, storeName, db) {
-    fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            const transaction = db.transaction([storeName], 'readwrite');
-            const store = transaction.objectStore(storeName);
-            store.clear(); // Clear existing records to prevent duplicates
-            data.forEach(item => store.put(item));
-        })
-        .catch(error => console.error(`Error fetching ${storeName}:`, error));
-}
 
 // Function to get and display categories
 function getAndDisplayCategories(db) {
