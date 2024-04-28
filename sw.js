@@ -2,6 +2,7 @@
 const CACHE_NAME = 'v1.1';
 const urlsToCache = [
     'index.html',
+    'dashboard.html',
     'style.css',
     'app.js',
     'manifest.json',
