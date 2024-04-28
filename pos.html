@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS System Interface</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f4f4; }
+        .category-list { background-color: #fff; padding: 10px 0; margin-bottom: 20px; }
+        .product { margin-bottom: 15px; }
+        .product img { width: 100%; }
+        .cart { background-color: #fff; padding: 20px; }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .cart-item { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
+        .cart-total { text-align: right; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <!-- Categories Navbar -->
+    <nav class="category-list shadow-sm">
+        <div class="container">
+            <div class="d-flex flex-row overflow-auto">
+                <!-- Add categories here -->
+                <div class="p-2">Category 1</div>
+                <div class="p-2">Category 2</div>
+                <!-- Add more categories as needed -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <!-- Products List -->
+            <div class="col-lg-8">
+                <div class="row">
+                    <!-- Replace with dynamic product items -->
+                    <div class="col-md-4 product">
+                        <img src="placeholder-image-url.jpg" alt="Product Name">
+                        <h5 class="mt-2">Product Name</h5>
+                        <p>$10.00</p>
+                        <button class="btn btn-primary">Add to Cart</button>
+                    </div>
+                    <!-- Repeat for other products -->
+                </div>
+            </div>
+
+            <!-- Cart Summary -->
+            <div class="col-lg-4">
+                <div class="cart">
+                    <div class="cart-header">
+                        <select class="form-select">
+                            <option>Walk-in Customer</option>
+                            <!-- Customer options -->
+                        </select>
+                        <input type="text" class="form-control" placeholder="Invoice Date">
+                    </div>
+                    <!-- Cart Items -->
+                    <div class="cart-items">
+                        <!-- Cart item example -->
+                        <div class="cart-item">
+                            <span class="item-name">Product 1</span>
+                            <span class="item-price">$10.00</span>
+                            <input type="number" class="form-control" value="1">
+                        </div>
+                        <!-- Add more cart items dynamically -->
+                    </div>
+                    <div class="cart-total">
+                        <h5>Total: $10.00</h5>
+                    </div>
+                    <button class="btn btn-success btn-block">Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"></script>
+</body>
+</html>
