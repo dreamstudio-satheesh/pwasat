@@ -1,7 +1,7 @@
 {
   "name": "SAT Sweets",
   "short_name": "SAT",
-  "start_url": "https://pwa.satsweets.com/",
+  "start_url": "https://pwa.satsweets.com/home.html",
   "display": "standalone",
   "background_color": "#100DD1",
   "theme_color": "#100DD1",
