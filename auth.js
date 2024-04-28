@@ -3,7 +3,7 @@ function checkLogin() {
     const token = localStorage.getItem('token');
     if (!token) {
         // If no token is found, redirect to the login page
-        window.location.href = '/login.html'; // Adjust the path as necessary
+        window.location.href = '/index.html'; // Adjust the path as necessary
     }
     // You can add more checks here, like verifying the token with the server
 }
