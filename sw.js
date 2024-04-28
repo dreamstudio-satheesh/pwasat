@@ -6,6 +6,7 @@ const urlsToCache = [
     'style.css',
     'db.js',
     'auth.js',
+    'pos.js',
     'app.js',
     'manifest.json',
     'assets/css/bootstrap.min.css',
