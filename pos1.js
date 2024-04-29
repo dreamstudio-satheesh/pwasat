@@ -44,7 +44,7 @@ function getAllProducts(db) {
     request.onsuccess = function(event) {
         displayProducts(event.target.result); // Use the existing displayProducts function
     };
-}\
+}
 
 function displayCategories(categories) {
     console.log('Displaying categories:', categories); // Add this line
