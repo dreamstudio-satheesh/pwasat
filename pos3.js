@@ -88,7 +88,4 @@ function displayProducts(products) {
 
 
 
-document.addEventListener('contextmenu', function(event) {
-    event.preventDefault();  // Prevents the default context menu
-    // You can trigger your own custom context menu here if needed
-  });
+
