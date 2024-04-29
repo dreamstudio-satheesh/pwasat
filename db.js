@@ -115,11 +115,8 @@ function fetchAndStoreCategories(db) {
           return response.json();
         })
         .then((categories) => {
-          if (!Array.isArray(categories)) {
-            throw new TypeError(
-              "Expected an array of categories, received: " + typeof categories
-            );
-          }
+          console.log("Fetched categories:", categories); // Logging fetched categories
+          
           const transaction = db.transaction(["categories"], "readwrite");
           const store = transaction.objectStore("categories");
           store.clear();
