@@ -1,17 +1,16 @@
 window.onload = function() {
     // Open a connection to the IndexedDB
-    const request = indexedDB.open('satsweetsDB', 1); 
+    const request = indexedDB.open('satsweetsDB', 1);
 
     request.onsuccess = function(event) {
         const db = event.target.result;
         getAndDisplayCategories(db); // Call your function once the DOM is ready
-
         getAllProducts(db);
     };
 
     request.onerror = function(event) {
-        console.error("Database error: " + event.target.errorCode);
-        // Handle errors here
+        // Corrected the way to access the error message
+        console.error("Database error: " + event.target.error.name + " - " + event.target.error.message);
     };
 
     // Add onupgradeneeded event handler here if necessary
@@ -20,10 +19,7 @@ window.onload = function() {
     };
 };
 
-// Rest of your code (e.g., getAndDisplayCategories function)
-
-
-// Function to get and display categories
+// Ensure your other functions similarly handle errors appropriately:
 function getAndDisplayCategories(db) {
     const transaction = db.transaction(['categories'], 'readonly');
     const store = transaction.objectStore('categories');
@@ -34,12 +30,11 @@ function getAndDisplayCategories(db) {
         displayCategories(event.target.result, db);
     };
     request.onerror = function(event) {
-        console.error('Failed to fetch categories:', event.target.errorCode);
+        console.error('Failed to fetch categories:', event.target.error.name + " - " + event.target.error.message);
     };
 }
 
-
-// Function to get and display all products
+// Similar corrections should be made in other error handling code blocks
 function getAllProducts(db) {
     const transaction = db.transaction(['products'], 'readonly');
     const store = transaction.objectStore('products');
@@ -47,6 +42,9 @@ function getAllProducts(db) {
 
     request.onsuccess = function(event) {
         displayProducts(event.target.result); // Use the existing displayProducts function
+    };
+    request.onerror = function(event) {
+        console.error('Failed to fetch products:', event.target.error.name + " - " + event.target.error.message);
     };
 }
 
