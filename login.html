@@ -39,6 +39,14 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Check if the token exists in localStorage
+        if (localStorage.getItem('token')) {
+            window.location.href = 'dashboard.html'; // Redirect to dashboard if token is found
+        }
+    </script>
+    
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="app.js"></script>
 </body>
