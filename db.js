@@ -1,4 +1,4 @@
-const dbRequest = indexedDB.open('satsweetsDB', 1);
+const dbRequest = indexedDB.open('satsweetsDB', 2);  // Note the version number is now 2
 
 dbRequest.onupgradeneeded = function(event) {
     let db = event.target.result;
@@ -7,7 +7,16 @@ dbRequest.onupgradeneeded = function(event) {
         db.createObjectStore('categories', { keyPath: 'id' });
     }
     if (!db.objectStoreNames.contains('products')) {
-        db.createObjectStore('products', { keyPath: 'id' });
+        const productStore = db.createObjectStore('products', { keyPath: 'id' });
+        // Create an index for 'category_id' within the 'products' store
+        productStore.createIndex('category_id', 'category_id', { unique: false });
+    } else {
+        // If the 'products' store already exists, ensure the index is also created
+        const transaction = event.target.transaction;
+        const productStore = transaction.objectStore('products');
+        if (!productStore.indexNames.contains('category_id')) {
+            productStore.createIndex('category_id', 'category_id', { unique: false });
+        }
     }
 };
 
@@ -20,6 +29,7 @@ dbRequest.onsuccess = function(event) {
 dbRequest.onerror = function(event) {
     console.error('Database error:', event.target.errorCode);
 };
+
 
 function fetchAndStoreCategories(db) {
     fetch('https://app.satsweets.com/api/categories')
