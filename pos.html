@@ -80,13 +80,10 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: flex-start;
-            /* Aligns items to the start */
-            padding: 10px;
+            padding: 5px;
         }
 
         .product {
-            flex: 1 1 200px;
-            /* Each product box will take up space, with a basis of 200px */
             margin: 10px;
             padding: 10px;
             background-color: #f9f9f9;
@@ -94,6 +91,27 @@
             border-radius: 4px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             text-align: center;
+            flex: 1 1 calc(33.33% - 20px);
+            /* Default for portrait mode */
+        }
+
+        @media screen and (orientation: landscape) {
+            .product {
+                flex: 1 1 calc(25% - 20px);
+                /* Adjust for 4 products per row */
+            }
+        }
+
+        /* Media query for mobile devices */
+        @media (max-width: 600px) {
+            .product {
+                margin: 5px;
+                /* Reduced margin */
+                padding: 5px;
+                /* Reduced padding */
+                border-radius: 2px;
+                /* Smaller border-radius */
+            }
         }
     </style>
 </head>
