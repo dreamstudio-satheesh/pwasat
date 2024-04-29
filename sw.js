@@ -1,5 +1,5 @@
 // sw.js
-const CACHE_NAME = 'v1.3';
+const CACHE_NAME = 'v2.0';
 const urlsToCache = [
     'index.html',
     'dashboard.html',
