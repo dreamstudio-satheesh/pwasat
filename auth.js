@@ -17,7 +17,7 @@ function logout() {
     // Clear user session/token from local storage or cookies
     localStorage.removeItem('token'); // Assuming you store a token named 'token'
     
-    clearIndexedDB();
+   /*  clearIndexedDB(); */
 
     // Redirect to login page or home page
     window.location.href = 'login.html'; // Change '/login.html' to your login page URL
