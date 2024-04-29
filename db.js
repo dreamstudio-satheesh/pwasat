@@ -1,4 +1,4 @@
-const dbRequest = indexedDB.open('satsweetsDB', 2);  // Note the version number is now 2
+const dbRequest = indexedDB.open('satsweetsDB', 1);  // Note the version number is now 2
 
 dbRequest.onupgradeneeded = function(event) {
     let db = event.target.result;

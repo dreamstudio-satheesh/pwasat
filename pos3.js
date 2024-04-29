@@ -1,6 +1,6 @@
 window.onload = function() {
     // Open a connection to the IndexedDB
-    const request = indexedDB.open('satsweetsDB', 2); 
+    const request = indexedDB.open('satsweetsDB', 1); 
 
     request.onsuccess = function(event) {
         const db = event.target.result;
