@@ -30,7 +30,7 @@ function getAndDisplayCategories(db) {
     const request = store.getAll();
 
     request.onsuccess = function(event) {
-        displayCategories(event.target.result);
+        displayCategories(event.target.result, db);
     };
 }
 
@@ -46,7 +46,7 @@ function getAllProducts(db) {
     };
 }
 
-function displayCategories(categories) {
+function displayCategories(categories, db) {
     console.log('Displaying categories:', categories); // Add this line
     
     const categoriesNav = document.getElementById('categories-nav');
