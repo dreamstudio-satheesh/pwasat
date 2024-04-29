@@ -5,7 +5,6 @@ const urlsToCache = [
     'dashboard.html',
     'pos.html',
     'style.css',
-    'db.js',
     'auth.js',
     'pos.js',
     'app.js',
