@@ -68,7 +68,7 @@ function displayProducts(products) {
     const productList = document.getElementById("product-list");
     productList.innerHTML = products.map(product => `
         <div class="product">
-            <img src="${product.thumbnail_url}" alt="${product.name}" style="width: 100px; height: auto;">
+            <img src="${product.thumbnail_url}" alt="${product.name}" style="width: 100px; max-height: 90px;">
             <h5>${product.name}</h5>
             <p>Price: ${product.price}</p>
         </div>
