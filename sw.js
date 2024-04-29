@@ -1,19 +1,18 @@
 // sw.js
-const CACHE_NAME = 'v2.0';
+const CACHE_NAME = 'v2.1';
 const urlsToCache = [
-    'index.html',
-    'dashboard.html',
-    'pos.html',
-    'style.css',
-    'auth.js',
-    'db.js',
-    'app.js',
-    'manifest.json',
-    'assets/css/bootstrap.min.css',
-    'assets/js/bootstrap.bundle.min.js',
-    'logo.png'
+    'https://pwa.satsweets.com/index.html',
+    'https://pwa.satsweets.com/dashboard.html',
+    'https://pwa.satsweets.com/pos.html',
+    'https://pwa.satsweets.com/style.css',
+    'https://pwa.satsweets.com/auth.js',
+    'https://pwa.satsweets.com/db.js',
+    'https://pwa.satsweets.com/app.js',
+    'https://pwa.satsweets.com/manifest.json',
+    'https://pwa.satsweets.com/assets/css/bootstrap.min.css',
+    'https://pwa.satsweets.com/assets/js/bootstrap.bundle.min.js',
+    'https://pwa.satsweets.com/logo.png'
 ];
-
 
 self.addEventListener('install', event => {
     event.waitUntil(
@@ -26,16 +25,38 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('fetch', event => {
-    event.respondWith(
-        fetch(event.request).catch(() => {
-            return caches.match(event.request);
-        })
-    );
+    const requestUrl = new URL(event.request.url);
+
+    // Define a strategy for caching product thumbnails
+    if (requestUrl.origin === 'https://app.satsweets.com' && requestUrl.pathname.startsWith('/storage/')) {
+        event.respondWith(
+            caches.match(event.request).then(cachedResponse => {
+                if (cachedResponse) {
+                    // If the image is already cached, return it
+                    return cachedResponse;
+                }
+
+                // Otherwise, fetch the image with CORS, cache it, and return it
+                return fetch(event.request, { mode: 'cors' }).then(response => {
+                    return caches.open(CACHE_NAME).then(cache => {
+                        cache.put(event.request, response.clone());
+                        return response;
+                    });
+                });
+            })
+        );
+    } else {
+        // For other requests, try to fetch from network first, then fallback to cache
+        event.respondWith(
+            fetch(event.request).catch(() => {
+                return caches.match(event.request);
+            })
+        );
+    }
 });
 
-
 self.addEventListener('activate', event => {
-    var cacheAllowlist = ['v2'];
+    var cacheAllowlist = [CACHE_NAME];
 
     event.waitUntil(
         caches.keys().then(keyList => {
