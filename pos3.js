@@ -1,6 +1,6 @@
 window.onload = function() {
     // Open a connection to the IndexedDB
-    const request = indexedDB.open('satsweetsDB', 2);
+    const request = indexedDB.open('satsweetsDB', 3);
 
     request.onsuccess = function(event) {
         const db = event.target.result;
@@ -70,6 +70,10 @@ function getAndDisplayProducts(categoryId, db) {
 
     request.onsuccess = function(event) {
         displayProducts(event.target.result);
+    };
+
+    request.onerror = function(event) {
+        console.error("Error fetching products by category:", event.target.error.message);
     };
 }
 

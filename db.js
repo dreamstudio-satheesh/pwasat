@@ -1,4 +1,4 @@
-const request = indexedDB.open('satsweetsDB', 2);  // Use at least the current version number
+const request = indexedDB.open('satsweetsDB', 3);  // Use at least the current version number
 
 
 dbRequest.onupgradeneeded = function(event) {
