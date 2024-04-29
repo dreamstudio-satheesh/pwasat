@@ -100,13 +100,13 @@ function fetchAndStoreCategories(db) {
     });
   } else {
     return new Promise((resolve, reject) => {
-      console.log("Using token:", token);
 
-      
+      let ntoken=localStorage.getItem('token');
+
       fetch("https://app.satsweets.com/api/categories", {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token}`,
+                'Authorization': `Bearer ${ntoken}`,
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
