@@ -67,58 +67,74 @@ function getAllProducts(db) {
 
 
 function fetchAndStoreCategories(db) {
-    return new Promise((resolve, reject) => {
-        fetch('https://app.satsweets.com/api/categories')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(categories => {
-                if (!Array.isArray(categories)) {
-                    throw new TypeError('Expected an array of categories, received: ' + typeof categories);
-                }
-                const transaction = db.transaction(['categories'], 'readwrite');
-                const store = transaction.objectStore('categories');
-                store.clear();
-                categories.forEach(category => {
-                    store.add(category);
+    if (!navigator.onLine) {
+        return new Promise((resolve, reject) => {
+            getAndDisplayCategories(db);
+            resolve();
+        });
+    } else {
+        return new Promise((resolve, reject) => {
+            fetch('https://app.satsweets.com/api/categories')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(categories => {
+                    if (!Array.isArray(categories)) {
+                        throw new TypeError('Expected an array of categories, received: ' + typeof categories);
+                    }
+                    const transaction = db.transaction(['categories'], 'readwrite');
+                    const store = transaction.objectStore('categories');
+                    store.clear();
+                    categories.forEach(category => {
+                        store.add(category);
+                    });
+                    transaction.oncomplete = () => resolve(); // Resolve promise when transaction completes
+                    transaction.onerror = () => reject(transaction.error); // Reject on error
+                })
+                .catch(error => {
+                    console.error('Error fetching categories:', error);
+                    reject(error); // Reject promise on fetch error
                 });
-                transaction.oncomplete = () => resolve(); // Resolve promise when transaction completes
-                transaction.onerror = () => reject(transaction.error); // Reject on error
-            })
-            .catch(error => {
-                console.error('Error fetching categories:', error);
-                reject(error); // Reject promise on fetch error
-            });
-    });
+        });
+    }
 }
 
 function fetchAndStoreProducts(db) {
-    return new Promise((resolve, reject) => {
-        fetch('https://app.satsweets.com/api/products')
-        .then(response => {
-            if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(products => {
-                const transaction = db.transaction(['products'], 'readwrite');
-                const store = transaction.objectStore('products');
-                store.clear();
-                products.forEach(product => {
-                    store.add(product);
+
+    if (!navigator.onLine) {
+        return new Promise((resolve, reject) => {
+            getAllProducts(db);
+            resolve();
+        });
+    } else {
+
+        return new Promise((resolve, reject) => {
+            fetch('https://app.satsweets.com/api/products')
+            .then(response => {
+                if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(products => {
+                    const transaction = db.transaction(['products'], 'readwrite');
+                    const store = transaction.objectStore('products');
+                    store.clear();
+                    products.forEach(product => {
+                        store.add(product);
+                    });
+                    transaction.oncomplete = () => resolve(); // Resolve promise when transaction completes
+                    transaction.onerror = () => reject(transaction.error); // Reject on error
+                })
+                .catch(error => {
+                    console.error('Error fetching products:', error);
+                    reject(error); // Reject promise on fetch error
                 });
-                transaction.oncomplete = () => resolve(); // Resolve promise when transaction completes
-                transaction.onerror = () => reject(transaction.error); // Reject on error
-            })
-            .catch(error => {
-                console.error('Error fetching products:', error);
-                reject(error); // Reject promise on fetch error
-            });
-    });
+        });
+    }    
 }
 
 
