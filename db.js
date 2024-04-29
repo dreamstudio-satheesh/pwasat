@@ -100,6 +100,9 @@ function fetchAndStoreCategories(db) {
     });
   } else {
     return new Promise((resolve, reject) => {
+      console.log("Using token:", token);
+
+      
       fetch("https://app.satsweets.com/api/categories", {
             method: 'GET',
             headers: {
@@ -116,7 +119,7 @@ function fetchAndStoreCategories(db) {
         })
         .then((categories) => {
           console.log("Fetched categories:", categories); // Logging fetched categories
-          
+
           const transaction = db.transaction(["categories"], "readwrite");
           const store = transaction.objectStore("categories");
           store.clear();
