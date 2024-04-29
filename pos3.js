@@ -56,7 +56,7 @@ function displayCategories(categories, db) {
     categoriesNav.innerHTML = ''; // Clear existing content
     categories.forEach(category => {
         const categoryDiv = document.createElement('div');
-        categoryDiv.className = 'category';
+        categoryDiv.className = 'category no-select';
         categoryDiv.textContent = category.name;
         categoryDiv.onclick = function() { getAndDisplayProducts(category.id, db); };
         categoriesNav.appendChild(categoryDiv);
@@ -80,7 +80,7 @@ function displayProducts(products) {
     productList.innerHTML = ''; // Clear existing content
     products.forEach(product => {
         const productDiv = document.createElement('div');
-        productDiv.className = 'product';
+        productDiv.className = 'product no-select';
         productDiv.innerHTML = `<h5>${product.name}</h5><p>${product.price}</p>`;
         productList.appendChild(productDiv);
     });
