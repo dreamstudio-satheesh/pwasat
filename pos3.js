@@ -81,7 +81,7 @@ function displayProducts(products) {
     products.forEach(product => {
         const productDiv = document.createElement('div');
         productDiv.className = 'product';
-        productDiv.innerHTML = `<p>${product.name}</p><p>${product.price}</p>`;
+        productDiv.innerHTML = `<h5>${product.name}</h5><p>${product.price}</p>`;
         productList.appendChild(productDiv);
     });
 }
