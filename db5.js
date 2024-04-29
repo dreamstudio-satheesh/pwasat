@@ -34,7 +34,8 @@ window.onload = function() {
             getAllProducts(db);
         })
         .catch(error => console.error('Error in fetching/storing products:', error));
-};
+    };
+}; 
 
 function getAndDisplayCategories(db) {
     const transaction = db.transaction(['categories'], 'readonly');
