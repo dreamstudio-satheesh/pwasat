@@ -65,36 +65,53 @@ function getAllProducts(db) {
     };
 }
 
+
 function fetchAndStoreCategories(db) {
-    fetch('https://app.satsweets.com/api/categories')
-        .then(response => response.json())
-        .then(categories => {
-            if (!Array.isArray(categories)) {
-                throw new TypeError('Expected an array of categories, received: ' + typeof categories);
-            }
-            const transaction = db.transaction(['categories'], 'readwrite');
-            const store = transaction.objectStore('categories');
-            store.clear();
-            categories.forEach(category => {
-                store.add(category);
+    return new Promise((resolve, reject) => {
+        fetch('https://app.satsweets.com/api/categories')
+            .then(response => response.json())
+            .then(categories => {
+                if (!Array.isArray(categories)) {
+                    throw new TypeError('Expected an array of categories, received: ' + typeof categories);
+                }
+                const transaction = db.transaction(['categories'], 'readwrite');
+                const store = transaction.objectStore('categories');
+                store.clear();
+                categories.forEach(category => {
+                    store.add(category);
+                });
+                transaction.oncomplete = () => resolve(); // Resolve promise when transaction completes
+                transaction.onerror = () => reject(transaction.error); // Reject on error
+            })
+            .catch(error => {
+                console.error('Error fetching categories:', error);
+                reject(error); // Reject promise on fetch error
             });
-        })
-        .catch(error => console.error('Error fetching categories:', error));
+    });
 }
 
 function fetchAndStoreProducts(db) {
-    fetch('https://app.satsweets.com/api/products')
-        .then(response => response.json())
-        .then(products => {
-            const transaction = db.transaction(['products'], 'readwrite');
-            const store = transaction.objectStore('products');
-            store.clear();
-            products.forEach(product => {
-                store.add(product);
+    return new Promise((resolve, reject) => {
+        fetch('https://app.satsweets.com/api/products')
+            .then(response => response.json())
+            .then(products => {
+                const transaction = db.transaction(['products'], 'readwrite');
+                const store = transaction.objectStore('products');
+                store.clear();
+                products.forEach(product => {
+                    store.add(product);
+                });
+                transaction.oncomplete = () => resolve(); // Resolve promise when transaction completes
+                transaction.onerror = () => reject(transaction.error); // Reject on error
+            })
+            .catch(error => {
+                console.error('Error fetching products:', error);
+                reject(error); // Reject promise on fetch error
             });
-        })
-        .catch(error => console.error('Error fetching products:', error));
+    });
 }
+
+
 
 function displayCategories(categories, db) {
     const categoriesNav = document.getElementById('categories-nav');
