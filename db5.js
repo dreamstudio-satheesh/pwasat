@@ -69,7 +69,12 @@ function getAllProducts(db) {
 function fetchAndStoreCategories(db) {
     return new Promise((resolve, reject) => {
         fetch('https://app.satsweets.com/api/categories')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(categories => {
                 if (!Array.isArray(categories)) {
                     throw new TypeError('Expected an array of categories, received: ' + typeof categories);
@@ -93,7 +98,12 @@ function fetchAndStoreCategories(db) {
 function fetchAndStoreProducts(db) {
     return new Promise((resolve, reject) => {
         fetch('https://app.satsweets.com/api/products')
-            .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(products => {
                 const transaction = db.transaction(['products'], 'readwrite');
                 const store = transaction.objectStore('products');
