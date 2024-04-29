@@ -1,10 +1,11 @@
 const token = localStorage.getItem('token');
 
-const request = indexedDB.open("satDB", 2);
+
 
 // Open a connection to the IndexedDB
 window.onload = function () {
   
+  const request = indexedDB.open("satDB", 2);
 
   request.onupgradeneeded = function (event) {
     const db = event.target.result;
