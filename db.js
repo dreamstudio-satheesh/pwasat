@@ -1,6 +1,10 @@
+const token = localStorage.getItem('token');
+
+const request = indexedDB.open("satDB", 2);
+
 // Open a connection to the IndexedDB
 window.onload = function () {
-  const request = indexedDB.open("satDB", 2);
+  
 
   request.onupgradeneeded = function (event) {
     const db = event.target.result;
@@ -96,7 +100,14 @@ function fetchAndStoreCategories(db) {
     });
   } else {
     return new Promise((resolve, reject) => {
-      fetch("https://app.satsweets.com/api/categories")
+      fetch("https://app.satsweets.com/api/categories", {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
         .then((response) => {
           if (!response.ok) {
             throw new Error("Network response was not ok");
@@ -154,7 +165,14 @@ function fetchAndStoreProducts(db) {
   } else {
     // Continue with your existing logic for online scenario
     return new Promise((resolve, reject) => {
-      fetch("https://app.satsweets.com/api/products")
+      fetch("https://app.satsweets.com/api/products", {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
         .then((response) => {
           if (!response.ok) {
             throw new Error("Network response was not ok");
