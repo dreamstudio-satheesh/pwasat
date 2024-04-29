@@ -1,3 +1,24 @@
+window.onload = function() {
+    // Open a connection to the IndexedDB
+    const request = indexedDB.open('satsweetsDB', 1); 
+
+    request.onsuccess = function(event) {
+        const db = event.target.result;
+        getAndDisplayCategories(db); // Call your function once the DOM is ready
+    };
+
+    request.onerror = function(event) {
+        console.error("Database error: " + event.target.errorCode);
+        // Handle errors here
+    };
+
+    // Add onupgradeneeded event handler here if necessary
+    request.onupgradeneeded = function(event) {
+        // This is where you would create stores/indexes if they don't exist already
+    };
+};
+
+// Rest of your code (e.g., getAndDisplayCategories function)
 
 
 // Function to get and display categories
