@@ -27,14 +27,23 @@ self.addEventListener('install', event => {
 
 self.addEventListener('fetch', event => {
     event.respondWith(
-        caches.match(event.request)
-            .then(response => {
-                // Cache hit - return response
-                if (response) {
-                    return response;
+        fetch(event.request).catch(() => {
+            return caches.match(event.request);
+        })
+    );
+});
+
+
+self.addEventListener('activate', event => {
+    var cacheAllowlist = ['v2'];
+
+    event.waitUntil(
+        caches.keys().then(keyList => {
+            return Promise.all(keyList.map(key => {
+                if (cacheAllowlist.indexOf(key) === -1) {
+                    return caches.delete(key);
                 }
-                return fetch(event.request);
-            }
-        )
+            }));
+        })
     );
 });
