@@ -43,13 +43,13 @@ function fetchAndDisplayData(db, storeName, displayFunction) {
             const apiURL = storeName === 'categories' ? "https://app.satsweets.com/api/categories" : "https://app.satsweets.com/api/products";
             fetchDataAndStore(apiURL, db, storeName).then(() => fetchAndDisplayData(db, storeName, displayFunction));
         } else {
-            displayFunction(data);
+            displayFunction(data, db);
         }
     }, `Failed to fetch ${storeName}:`);
 }
 
 // Display functions
-function displayCategories(categories) {
+function displayCategories(categories, db) {
     const categoriesNav = document.getElementById("categories-nav");
     categoriesNav.innerHTML = categories.map(category => `<div class="category" onclick="getAndDisplayProducts(${category.id}, db)">${category.name}</div>`).join('');
 }
@@ -57,6 +57,15 @@ function displayCategories(categories) {
 function displayProducts(products) {
     const productList = document.getElementById("product-list");
     productList.innerHTML = products.map(product => `<div class="product"><h5>${product.name}</h5><p>${product.price}</p></div>`).join('');
+}
+
+function getAndDisplayProducts(categoryId, db) {
+    const transaction = db.transaction(["products"], "readonly");
+    const store = transaction.objectStore("products");
+    const index = store.index("category_id");
+    handleIDBRequest(index.getAll(categoryId), (products) => {
+        displayProducts(products);
+    }, `Failed to fetch products for category ${categoryId}:`);
 }
 
 // Initialization
