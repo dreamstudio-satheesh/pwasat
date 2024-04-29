@@ -5,7 +5,7 @@ const urlsToCache = [
     'dashboard.html',
     'pos.html',
     'style.css',
-    'auth1.js',
+    'auth.js',
     'db5.js',
     'app.js',
     'manifest.json',
