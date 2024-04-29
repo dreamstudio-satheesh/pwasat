@@ -5,6 +5,8 @@ window.onload = function() {
     request.onsuccess = function(event) {
         const db = event.target.result;
         getAndDisplayCategories(db); // Call your function once the DOM is ready
+
+        getAllProducts(db);
     };
 
     request.onerror = function(event) {
@@ -31,6 +33,18 @@ function getAndDisplayCategories(db) {
         displayCategories(event.target.result);
     };
 }
+
+
+// Function to get and display all products
+function getAllProducts(db) {
+    const transaction = db.transaction(['products'], 'readonly');
+    const store = transaction.objectStore('products');
+    const request = store.getAll();
+
+    request.onsuccess = function(event) {
+        displayProducts(event.target.result); // Use the existing displayProducts function
+    };
+}\
 
 function displayCategories(categories) {
     console.log('Displaying categories:', categories); // Add this line
