@@ -1,6 +1,6 @@
 // Open a connection to the IndexedDB
 window.onload = function() {
-    const request = indexedDB.open('satDB', 1);
+    const request = indexedDB.open('satDB', 2);
 
     request.onupgradeneeded = function(event) {
         const db = event.target.result;
