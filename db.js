@@ -5,11 +5,13 @@ dbRequest.onupgradeneeded = function(event) {
 
     if (!db.objectStoreNames.contains('categories')) {
         db.createObjectStore('categories', { keyPath: 'id' });
+        console.log('Categories store created.');
     }
     if (!db.objectStoreNames.contains('products')) {
         const productStore = db.createObjectStore('products', { keyPath: 'id' });
         // Create an index for 'category_id' within the 'products' store
         productStore.createIndex('category_id', 'category_id', { unique: false });
+        console.log('Index on category_id created.');
     } else {
         // If the 'products' store already exists, ensure the index is also created
         const transaction = event.target.transaction;

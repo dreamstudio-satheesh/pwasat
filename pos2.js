@@ -30,7 +30,11 @@ function getAndDisplayCategories(db) {
     const request = store.getAll();
 
     request.onsuccess = function(event) {
+        console.log('Categories fetched successfully:', event.target.result.length);
         displayCategories(event.target.result, db);
+    };
+    request.onerror = function(event) {
+        console.error('Failed to fetch categories:', event.target.errorCode);
     };
 }
 
