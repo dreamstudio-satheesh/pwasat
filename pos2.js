@@ -51,7 +51,6 @@ function getAllProducts(db) {
 }
 
 function displayCategories(categories, db) {
-    console.log('Displaying categories:', categories); // Add this line
     
     const categoriesNav = document.getElementById('categories-nav');
     categoriesNav.innerHTML = ''; // Clear existing content
