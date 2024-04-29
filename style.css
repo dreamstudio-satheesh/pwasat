@@ -9,20 +9,5 @@
 
 
 
-#categories-nav {
-    display: flex;              /* Enables Flexbox */
-    flex-wrap: wrap;            /* Allows items to wrap onto the next line */
-    justify-content: space-evenly; /* Distributes space evenly between items */
-    align-items: center;        /* Vertically align items in the center */
-    padding: 10px 0;            /* Adds padding above and below the container */
-}
 
-.category {
-    margin: 5px;               /* Adds space around each category */
-    padding: 8px 16px;         /* Padding inside each category */
-    background-color: #f4f4f4; /* Background color for categories */
-    border-radius: 5px;        /* Rounded corners for categories */
-    cursor: pointer;           /* Cursor pointer to indicate clickable items */
-    white-space: nowrap;       /* Prevents text from wrapping */
-}
 

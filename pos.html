@@ -1,21 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>POS System Interface</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f4f4f4; }
-        .category-list { background-color: #fff; padding: 10px 0; margin-bottom: 20px; }
-        .product { margin-bottom: 15px; }
-        .product img { width: 100%; }
-        .cart { background-color: #fff; padding: 20px; }
-        .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .cart-item { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
-        .cart-total { text-align: right; margin-top: 20px; }
+        body {
+            background-color: #f4f4f4;
+        }
+
+        .category-list {
+            background-color: #fff;
+            padding: 10px 0;
+            margin-bottom: 20px;
+        }
+
+        .product {
+            margin-bottom: 15px;
+        }
+
+        .product img {
+            width: 100%;
+        }
+
+        .cart {
+            background-color: #fff;
+            padding: 20px;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .cart-total {
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        #categories-nav {
+            display: flex;
+            /* Enables Flexbox */
+            flex-wrap: wrap;
+            /* Allows items to wrap onto the next line */
+            justify-content: space-evenly;
+            /* Distributes space evenly between items */
+            align-items: center;
+            /* Vertically align items in the center */
+            padding: 10px 0;
+            /* Adds padding above and below the container */
+        }
+
+        .category {
+            margin: 5px;
+            /* Adds space around each category */
+            padding: 8px 16px;
+            /* Padding inside each category */
+            background-color: #f4f4f4;
+            /* Background color for categories */
+            border-radius: 5px;
+            /* Rounded corners for categories */
+            cursor: pointer;
+            /* Cursor pointer to indicate clickable items */
+            white-space: nowrap;
+            /* Prevents text from wrapping */
+        }
     </style>
 </head>
+
 <body>
     <!-- Categories Navbar -->
     <nav class="category-list shadow-sm">
@@ -37,7 +99,7 @@
                     <!-- Replace with dynamic product items -->
                     <div id="product-list" class="container"></div>
 
-                   <!--  <div class="col-md-4 product">
+                    <!--  <div class="col-md-4 product">
                         <img src="placeholder-image-url.jpg" alt="Product Name">
                         <h5 class="mt-2">Product Name</h5>
                         <p>$10.00</p>
@@ -78,9 +140,10 @@
 
     <script src="db.js"></script>
     <script src="auth.js"></script>
-    <script src="pos1.js" ></script>
+    <script src="pos1.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"></script>
 </body>
+
 </html>
