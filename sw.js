@@ -3,6 +3,7 @@ const CACHE_NAME = 'v1.3';
 const urlsToCache = [
     'index.html',
     'dashboard.html',
+    'pos.html',
     'style.css',
     'db.js',
     'auth.js',
