@@ -33,6 +33,8 @@ function getAndDisplayCategories(db) {
 }
 
 function displayCategories(categories) {
+    console.log('Displaying categories:', categories); // Add this line
+    
     const categoriesNav = document.getElementById('categories-nav');
     categoriesNav.innerHTML = ''; // Clear existing content
     categories.forEach(category => {
