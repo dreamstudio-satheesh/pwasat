@@ -66,7 +66,13 @@ function displayCategories(categories, db) {
 
 function displayProducts(products) {
     const productList = document.getElementById("product-list");
-    productList.innerHTML = products.map(product => `<div class="product"><h5>${product.name}</h5><p>${product.price}</p></div>`).join('');
+    productList.innerHTML = products.map(product => `
+        <div class="product">
+            <img src="${product.thumbnail_url}" alt="${product.name}" style="width: 100px; height: auto;">
+            <h5>${product.name}</h5>
+            <p>Price: ${product.price}</p>
+        </div>
+    `).join('');
 }
 
 function getAndDisplayProducts(categoryId, db) {
