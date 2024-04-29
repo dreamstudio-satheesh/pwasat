@@ -51,8 +51,18 @@ function fetchAndDisplayData(db, storeName, displayFunction) {
 // Display functions
 function displayCategories(categories, db) {
     const categoriesNav = document.getElementById("categories-nav");
-    categoriesNav.innerHTML = categories.map(category => `<div class="category" onclick="getAndDisplayProducts(${category.id}, db)">${category.name}</div>`).join('');
+    categoriesNav.innerHTML = "";
+    categories.forEach(category => {
+        const categoryDiv = document.createElement("div");
+        categoryDiv.className = "category";
+        categoryDiv.textContent = category.name;
+        categoryDiv.onclick = function() {
+            getAndDisplayProducts(category.id, db);
+        };
+        categoriesNav.appendChild(categoryDiv);
+    });
 }
+
 
 function displayProducts(products) {
     const productList = document.getElementById("product-list");
