@@ -97,8 +97,13 @@
 
         @media screen and (orientation: landscape) {
             .product {
-                flex: 1 1 calc(20% - 10px);
-                /* Adjust for 4 products per row */
+                flex: 1 1 calc(20% - 20px);
+                /* Adjust for 5 products per row */
+            }
+
+            .product-name {
+                font-size: 12px;
+                /* Smaller font size for product name in landscape mode */
             }
         }
 
@@ -111,6 +116,11 @@
                 /* Reduced padding */
                 border-radius: 2px;
                 /* Smaller border-radius */
+            }
+
+            .product-name {
+                font-size: 11px;
+                /* Even smaller font size for mobile view */
             }
         }
     </style>
