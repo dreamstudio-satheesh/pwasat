@@ -83,7 +83,7 @@ function getAndDisplayProducts(categoryId, db) {
 }
 
 function displayCustomers(customers) {
-    const customerSelect = document.querySelector(".cart-header select");
+    const customerSelect = document.querySelector(".customerslist select");
     customerSelect.innerHTML = ""; // Clear existing options
     customers.forEach(customer => {
         const option = document.createElement("option");
