@@ -62,19 +62,24 @@ function displayCategories(categories) {
 
 function displayProducts(products) {
     const productList = document.getElementById("product-list");
-    productList.innerHTML = "";
+    productList.innerHTML = ""; // Clear previous listings
     products.forEach(product => {
+        // Check if thumbnail_url is valid; otherwise, use a default image
+        const imageUrl = product.thumbnail_url ? product.thumbnail_url : "https://app.satsweets.com/assets/img/product/noimage.png";
+
         const productDiv = document.createElement("div");
         productDiv.className = "product";
         productDiv.innerHTML = `
-            <img src="${product.thumbnail_url}" alt="${product.name}" style="width: 100px; max-height: 90px;">
+            <img src="${imageUrl}" alt="${product.name}" style="width: 100px; max-height: 90px;">
             <h5>${product.name}</h5>
             <p>Price: ${product.price}</p>
         `;
-        productDiv.onclick = () => addToCart(product.id);
+        productDiv.style.cursor = "pointer";
+        productDiv.onclick = () => addToCart(product.id); // Add to cart by product ID
         productList.appendChild(productDiv);
     });
 }
+
 
 function displayCustomers(customers) {
     const customerSelect = document.querySelector(".customerslist select");
