@@ -65,7 +65,7 @@ function displayCategories(categories, db) {
 function displayProducts(products) {
     const productList = document.getElementById("product-list");
     productList.innerHTML = products.map(product => `
-        <div class="product" onclick="addToCart(${JSON.stringify(product)})" style="cursor: pointer;">
+        <div class="product" onclick="addToCart('${product.id}')" style="cursor: pointer;">
             <img src="${product.thumbnail_url}" alt="${product.name}" style="width: 100px; max-height: 90px;">
             <h5>${product.name}</h5>
             <p>Price: ${product.price}</p>
@@ -126,15 +126,32 @@ window.onload = function () {
 
 const cart = [];
 
-function addToCart(product) {
-    const existingProduct = cart.find(item => item.id === product.id);
-    if (existingProduct) {
-        existingProduct.quantity += 1;
-    } else {
-        cart.push({...product, quantity: 1});
-    }
-    displayCart();
+function addToCart(productId, db) {
+    const transaction = db.transaction(['products'], 'readonly');
+    const store = transaction.objectStore('products');
+    const request = store.get(productId);
+
+    request.onsuccess = function () {
+        const product = request.result;
+        if (!product) {
+            console.error("Product not found!");
+            return;
+        }
+
+        const existingProduct = cart.find(item => item.id === productId);
+        if (existingProduct) {
+            existingProduct.quantity += 1;
+        } else {
+            cart.push({...product, quantity: 1});
+        }
+        displayCart();
+    };
+
+    request.onerror = function (event) {
+        console.error("Error fetching product from IndexedDB:", event.target.error);
+    };
 }
+
 
 function increaseQuantity(productId) {
     const product = cart.find(item => item.id === productId);
