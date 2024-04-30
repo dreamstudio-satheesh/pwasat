@@ -55,7 +55,9 @@ function displayCategories(categories) {
         const categoryDiv = document.createElement("div");
         categoryDiv.className = "category";
         categoryDiv.textContent = category.name;
-        categoryDiv.onclick = () => fetchAndDisplayData("products", displayProducts, "https://app.satsweets.com/api/products?categoryId=" + category.id);
+        categoryDiv.onclick = function() {
+            getAndDisplayProducts(category.id);
+        };
         categoriesNav.appendChild(categoryDiv);
     });
 }
