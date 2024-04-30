@@ -57,6 +57,7 @@ body {
 }
 
 .item-name {
+    font-size: smaller;
     font-weight: bold; /* Optional: makes the item name bold */
 }
 
