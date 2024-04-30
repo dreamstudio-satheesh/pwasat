@@ -60,14 +60,22 @@ function displayCategories(categories, db) {
 
 function displayProducts(products, db) {
     const productList = document.getElementById("product-list");
-    productList.innerHTML = products.map(product => `
-        <div class="product" onclick="addToCart('${product.id}', db)" style="cursor: pointer;">
+    productList.innerHTML = ""; // Clear previous products
+
+    products.forEach(product => {
+        const productDiv = document.createElement("div");
+        productDiv.className = "product";
+        productDiv.innerHTML = `
             <img src="${product.thumbnail_url}" alt="${product.name}" style="width: 100px; max-height: 90px;">
             <h5>${product.name}</h5>
             <p>Price: ${product.price}</p>
-        </div>
-    `).join('');
+        `;
+        productDiv.style.cursor = "pointer";
+        productDiv.onclick = () => addToCart(product.id, db); // Attach event listener directly with access to `db`
+        productList.appendChild(productDiv);
+    });
 }
+
 
 function getAndDisplayProducts(categoryId, db) {
     const transaction = db.transaction(["products"], "readonly");
