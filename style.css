@@ -39,10 +39,32 @@ body {
 }
 
 .cart-item {
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc; /* Optional divider */
 }
+
+.cart-item-details {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.quantity-controls button,
+.quantity-controls input {
+    margin: 0 5px;
+}
+
+.item-name {
+    font-weight: bold; /* Optional: makes the item name bold */
+}
+
+/* Adjustments to improve accessibility and usability */
+.quantity-controls input {
+    text-align: center;
+}
+
 
 .cart-total {
     text-align: right;

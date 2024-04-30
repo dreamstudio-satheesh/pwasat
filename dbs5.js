@@ -165,16 +165,18 @@ function addToCart(productId) {
     };
 }
 
-
 function displayCart() {
     const cartItemsDiv = document.querySelector(".cart-items");
     cartItemsDiv.innerHTML = cart.map(item => `
         <div class="cart-item">
-            <span class="item-name">${item.name}</span>
-            <span class="item-price">$${item.price}</span>
-            <button onclick="decreaseQuantity('${item.id}')">-</button>
-            <input type="number" style="width:60px;" class="form-control" value="${item.quantity}" readonly>
-            <button onclick="increaseQuantity('${item.id}')">+</button>
+            <div class="cart-item-details">
+                <span class="item-name">${item.name} $${item.price}</span>
+            </div>
+            <div class="quantity-controls">
+                <button onclick="decreaseQuantity('${item.id}')">-</button>
+                <input type="number" style="width:60px;" class="form-control" value="${item.quantity}" readonly>
+                <button onclick="increaseQuantity('${item.id}')">+</button>
+            </div>
         </div>
     `).join('');
 }
