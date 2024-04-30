@@ -173,9 +173,9 @@ function displayCart() {
                 <span class="item-name">${item.name} $${item.price}</span>
             </div>
             <div class="quantity-controls">
-                <button onclick="decreaseQuantity('${item.id}')">-</button>
-                <input type="number" style="width:60px;" class="form-control" value="${item.quantity}" readonly>
-                <button onclick="increaseQuantity('${item.id}')">+</button>
+                <button class="btn btn-sm" onclick="decreaseQuantity('${item.id}')">-</button>
+                <input type="number" style="width:60px;" class="form-control input-sm" value="${item.quantity}" readonly>
+                <button class="btn btn-sm" onclick="increaseQuantity('${item.id}')">+</button>
             </div>
         </div>
     `).join('');
