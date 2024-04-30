@@ -1,3 +1,4 @@
+let db; // This will hold the database connection globally
 const token = localStorage.getItem("token");
 
 // Utility to handle requests to IndexedDB
@@ -71,7 +72,7 @@ function displayProducts(products, db) {
             <p>Price: ${product.price}</p>
         `;
         productDiv.style.cursor = "pointer";
-        productDiv.onclick = () => addToCart(product.id, db); // Attach event listener directly with access to `db`
+        productDiv.onclick = () => addToCart(product.id); // Attach event listener directly with access to `db`
         productList.appendChild(productDiv);
     });
 }
@@ -97,7 +98,7 @@ function displayCustomers(customers) {
 
 const cart = [];
 
-function addToCart(productId, db) {
+function addToCart(productId) {
     const transaction = db.transaction(['products'], 'readonly');
     const store = transaction.objectStore('products');
     const request = store.get(productId);
@@ -122,6 +123,7 @@ function addToCart(productId, db) {
         console.error("Error fetching product from IndexedDB:", event.target.error);
     };
 }
+
 
 function displayCart() {
     const cartItemsDiv = document.querySelector(".cart-items");
@@ -159,23 +161,27 @@ window.onload = function () {
     const request = indexedDB.open("satDB", 5);
 
     request.onupgradeneeded = function (event) {
-        const db = event.target.result;
-        if (!db.objectStoreNames.contains("categories")) {
-            db.createObjectStore("categories", { keyPath: "id" });
+        const dbUpgrade = event.target.result;
+        if (!dbUpgrade.objectStoreNames.contains("categories")) {
+            dbUpgrade.createObjectStore("categories", { keyPath: "id" });
         }
-        if (!db.objectStoreNames.contains("products")) {
-            const productStore = db.createObjectStore("products", { keyPath: "id" });
+        if (!dbUpgrade.objectStoreNames.contains("products")) {
+            const productStore = dbUpgrade.createObjectStore("products", { keyPath: "id" });
             productStore.createIndex("category_id", "category_id", { unique: false });
         }
-        if (!db.objectStoreNames.contains("customers")) {
-            db.createObjectStore("customers", { keyPath: "id" });
+        if (!dbUpgrade.objectStoreNames.contains("customers")) {
+            dbUpgrade.createObjectStore("customers", { keyPath: "id" });
         }
     };
 
     request.onsuccess = function (event) {
-        const db = event.target.result;
-        fetchAndDisplayData(db, "categories", displayCategories, "https://app.satsweets.com/api/categories");
-        fetchAndDisplayData(db, "products", displayProducts, "https://app.satsweets.com/api/products");
-        fetchAndDisplayData(db, "customers", displayCustomers, "https://app.satsweets.com/api/customers");
+        db = event.target.result; // Set the global db variable
+        fetchAndDisplayData("categories", displayCategories, "https://app.satsweets.com/api/categories");
+        fetchAndDisplayData("products", displayProducts, "https://app.satsweets.com/api/products");
+        fetchAndDisplayData("customers", displayCustomers, "https://app.satsweets.com/api/customers");
+    };
+
+    request.onerror = function (event) {
+        console.error("Database error: ", event.target.errorCode);
     };
 };
