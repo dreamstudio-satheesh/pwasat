@@ -182,20 +182,28 @@ function displayCart() {
 }
 
 function increaseQuantity(productId) {
+    console.log("Increasing quantity for product ID:", productId);
     const product = cart.find(item => item.id === productId);
     if (product) {
+        console.log("Current quantity:", product.quantity);
         product.quantity += 1;
+        console.log("New quantity:", product.quantity);
         displayCart();
     }
 }
 
 function decreaseQuantity(productId) {
+    console.log("Decreasing quantity for product ID:", productId);
     const product = cart.find(item => item.id === productId);
     if (product && product.quantity > 1) {
+        console.log("Current quantity:", product.quantity);
         product.quantity -= 1;
+        console.log("New quantity:", product.quantity);
     } else {
+        console.log("Removing product from cart.");
         cart.splice(cart.indexOf(product), 1);
     }
     displayCart();
 }
+
 
