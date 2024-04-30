@@ -11,6 +11,32 @@ function handleIDBRequest(request, onSuccess, onError) {
 }
 
 // Generic function to fetch data from the API and store it in IndexedDB
+function fetchDataAndStore(url, db, storeName) {
+    if (!navigator.onLine) {
+        console.log("Offline mode: Using cached data for", storeName);
+        return; // Early return if offline, assuming data is already fetched earlier
+    }
+    return fetch(url, {
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+        }
+    }).then(response => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.json();
+    }).then(data => {
+        const transaction = db.transaction([storeName], "readwrite");
+        const store = transaction.objectStore(storeName);
+        store.clear();
+        data.forEach(item => store.add(item));
+        return transaction.complete;
+    }).catch(error => console.error(`Error fetching ${storeName}:`, error));
+}
+
+
+// Generic function to fetch data from the API and store it in IndexedDB
 function fetchAndDisplayData(db, storeName, displayFunction, apiURL) {
     const store = db.transaction([storeName], "readonly").objectStore(storeName);
     handleIDBRequest(store.getAll(), (data) => {
