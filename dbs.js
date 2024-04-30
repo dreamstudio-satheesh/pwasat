@@ -65,7 +65,7 @@ function displayCategories(categories, db) {
 function displayProducts(products) {
     const productList = document.getElementById("product-list");
     productList.innerHTML = products.map(product => `
-        <div class="product">
+        <div class="product" onclick="addToCart(${JSON.stringify(product)})" style="cursor: pointer;">
             <img src="${product.thumbnail_url}" alt="${product.name}" style="width: 100px; max-height: 90px;">
             <h5>${product.name}</h5>
             <p>Price: ${product.price}</p>
@@ -118,3 +118,54 @@ window.onload = function () {
         fetchAndDisplayData(db, "customers", displayCustomers, "https://app.satsweets.com/api/customers");
     };
 };
+
+
+
+
+
+
+const cart = [];
+
+function addToCart(product) {
+    const existingProduct = cart.find(item => item.id === product.id);
+    if (existingProduct) {
+        existingProduct.quantity += 1;
+    } else {
+        cart.push({...product, quantity: 1});
+    }
+    displayCart();
+}
+
+function increaseQuantity(productId) {
+    const product = cart.find(item => item.id === productId);
+    if (product) {
+        product.quantity += 1;
+        displayCart();
+    }
+}
+
+function decreaseQuantity(productId) {
+    const product = cart.find(item => item.id === productId);
+    if (product) {
+        product.quantity -= 1;
+        if (product.quantity <= 0) {
+            cart.splice(cart.indexOf(product), 1);
+        }
+        displayCart();
+    }
+}
+
+
+function displayCart() {
+    const cartItemsDiv = document.querySelector(".cart-items");
+    cartItemsDiv.innerHTML = cart.map(item => `
+        <div class="cart-item">
+            <span class="item-name">${item.name}</span>
+            <span class="item-price">$${item.price}</span>
+            <button onclick="decreaseQuantity(${item.id})">-</button>
+            <input type="number" class="form-control" value="${item.quantity}" readonly>
+            <button onclick="increaseQuantity(${item.id})">+</button>
+        </div>
+    `).join('');
+}
+
