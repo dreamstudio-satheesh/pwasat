@@ -1,7 +1,7 @@
-let db; // This will hold the database connection globally
-const token = localStorage.getItem("token");
+// Global variable to hold the database connection
+let db;
 
-// Utility to handle requests to IndexedDB
+// Function to handle IndexedDB requests
 function handleIDBRequest(request, onSuccess, onError) {
     request.onsuccess = function (event) {
         onSuccess(event.target.result);
@@ -11,16 +11,16 @@ function handleIDBRequest(request, onSuccess, onError) {
     };
 }
 
-// Generic function to fetch data from the API and store it in IndexedDB
-function fetchDataAndStore(url, db, storeName) {
+// Function to fetch data from an API and store it in IndexedDB
+function fetchDataAndStore(url, storeName) {
     if (!navigator.onLine) {
         console.log("Offline mode: Using cached data for", storeName);
-        return;
+        return; // Early return if offline, assuming data is already fetched earlier
     }
     return fetch(url, {
         method: 'GET',
         headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
             Accept: 'application/json',
             'Content-Type': 'application/json'
         }
@@ -35,34 +35,34 @@ function fetchDataAndStore(url, db, storeName) {
     }).catch(error => console.error(`Error fetching ${storeName}:`, error));
 }
 
-// Function to fetch and display categories, products, or customers
-function fetchAndDisplayData(db, storeName, displayFunction, apiURL) {
+// Function to fetch and display data from IndexedDB
+function fetchAndDisplayData(storeName, displayFunction, apiURL) {
     const store = db.transaction([storeName], "readonly").objectStore(storeName);
     handleIDBRequest(store.getAll(), (data) => {
         if (data.length === 0) {
-            fetchDataAndStore(apiURL, db, storeName).then(() => fetchAndDisplayData(db, storeName, displayFunction, apiURL));
+            fetchDataAndStore(apiURL, storeName).then(() => fetchAndDisplayData(storeName, displayFunction, apiURL));
         } else {
-            displayFunction(data, db);
+            displayFunction(data);
         }
     }, `Failed to fetch ${storeName}:`);
 }
 
-function displayCategories(categories, db) {
+// Display functions for categories, products, and customers
+function displayCategories(categories) {
     const categoriesNav = document.getElementById("categories-nav");
     categoriesNav.innerHTML = "";
     categories.forEach(category => {
         const categoryDiv = document.createElement("div");
         categoryDiv.className = "category";
         categoryDiv.textContent = category.name;
-        categoryDiv.onclick = () => getAndDisplayProducts(category.id, db);
+        categoryDiv.onclick = () => fetchAndDisplayData("products", displayProducts, "https://app.satsweets.com/api/products?categoryId=" + category.id);
         categoriesNav.appendChild(categoryDiv);
     });
 }
 
-function displayProducts(products, db) {
+function displayProducts(products) {
     const productList = document.getElementById("product-list");
-    productList.innerHTML = ""; // Clear previous products
-
+    productList.innerHTML = "";
     products.forEach(product => {
         const productDiv = document.createElement("div");
         productDiv.className = "product";
@@ -71,18 +71,9 @@ function displayProducts(products, db) {
             <h5>${product.name}</h5>
             <p>Price: ${product.price}</p>
         `;
-        productDiv.style.cursor = "pointer";
-        productDiv.onclick = () => addToCart(product.id); // Attach event listener directly with access to `db`
+        productDiv.onclick = () => addToCart(product.id);
         productList.appendChild(productDiv);
     });
-}
-
-
-function getAndDisplayProducts(categoryId, db) {
-    const transaction = db.transaction(["products"], "readonly");
-    const store = transaction.objectStore("products");
-    const index = store.index("category_id");
-    handleIDBRequest(index.getAll(categoryId), (products) => displayProducts(products, db), `Failed to fetch products for category ${categoryId}:`);
 }
 
 function displayCustomers(customers) {
@@ -95,6 +86,49 @@ function displayCustomers(customers) {
         customerSelect.appendChild(option);
     });
 }
+
+function getAndDisplayProducts(categoryId) {
+    const transaction = db.transaction(["products"], "readonly");
+    const store = transaction.objectStore("products");
+    const index = store.index("category_id");
+    handleIDBRequest(index.getAll(categoryId), (products) => {
+        displayProducts(products);
+    }, `Failed to fetch products for category ${categoryId}:`);
+}
+
+
+// Initialization
+window.onload = function () {
+    const request = indexedDB.open("satDB", 5);
+
+    request.onupgradeneeded = function (event) {
+        const dbUpgrade = event.target.result;
+        if (!dbUpgrade.objectStoreNames.contains("categories")) {
+            dbUpgrade.createObjectStore("categories", { keyPath: "id" });
+        }
+        if (!dbUpgrade.objectStoreNames.contains("products")) {
+            const productStore = dbUpgrade.createObjectStore("products", { keyPath: "id" });
+            productStore.createIndex("category_id", "category_id", { unique: false });
+        }
+        if (!dbUpgrade.objectStoreNames.contains("customers")) {
+            dbUpgrade.createObjectStore("customers", { keyPath: "id" });
+        }
+    };
+
+    request.onsuccess = function (event) {
+        db = event.target.result; // Set the global database connection
+        fetchAndDisplayData("categories", displayCategories, "https://app.satsweets.com/api/categories");
+        fetchAndDisplayData("products", displayProducts, "https://app.satsweets.com/api/products");
+        fetchAndDisplayData("customers", displayCustomers, "https://app.satsweets.com/api/customers");
+    };
+
+    request.onerror = function (event) {
+        console.error("Database error: ", event.target.errorCode);
+    };
+};
+
+
+
 
 const cart = [];
 
@@ -156,32 +190,3 @@ function decreaseQuantity(productId) {
     displayCart();
 }
 
-// Initialization
-window.onload = function () {
-    const request = indexedDB.open("satDB", 5);
-
-    request.onupgradeneeded = function (event) {
-        const dbUpgrade = event.target.result;
-        if (!dbUpgrade.objectStoreNames.contains("categories")) {
-            dbUpgrade.createObjectStore("categories", { keyPath: "id" });
-        }
-        if (!dbUpgrade.objectStoreNames.contains("products")) {
-            const productStore = dbUpgrade.createObjectStore("products", { keyPath: "id" });
-            productStore.createIndex("category_id", "category_id", { unique: false });
-        }
-        if (!dbUpgrade.objectStoreNames.contains("customers")) {
-            dbUpgrade.createObjectStore("customers", { keyPath: "id" });
-        }
-    };
-
-    request.onsuccess = function (event) {
-        db = event.target.result; // Set the global db variable
-        fetchAndDisplayData("categories", displayCategories, "https://app.satsweets.com/api/categories");
-        fetchAndDisplayData("products", displayProducts, "https://app.satsweets.com/api/products");
-        fetchAndDisplayData("customers", displayCustomers, "https://app.satsweets.com/api/customers");
-    };
-
-    request.onerror = function (event) {
-        console.error("Database error: ", event.target.errorCode);
-    };
-};
