@@ -170,7 +170,7 @@ function displayCart() {
     cartItemsDiv.innerHTML = cart.map(item => `
         <div class="cart-item">
             <div class="cart-item-details">
-                <span class="item-name">${item.name} $${item.price}</span>
+                <span class="item-name">${item.name} ₹${item.price}</span>
             </div>
             <div class="quantity-controls">
                 <button class="btn btn-sm" onclick="decreaseQuantity('${item.id}')">-</button>
