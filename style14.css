@@ -26,6 +26,18 @@ body {
     width: 100%;
 }
 
+.cart {
+    background-color: #fff;
+    padding: 20px;
+}
+
+.cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
 .cart-item {
     display: flex;
     align-items: center; /* Ensure vertical alignment in the center */
@@ -58,7 +70,6 @@ body {
     font-size: smaller;
     font-weight: bold;
 }
-
 
 .cart-total {
     text-align: right;
