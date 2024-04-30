@@ -35,12 +35,13 @@ function fetchDataAndStore(url, db, storeName) {
     }).catch(error => console.error(`Error fetching ${storeName}:`, error));
 }
 
-// Function to fetch and display categories, products or customers
-function fetchAndDisplayData(db, storeName, displayFunction, apiURL) {
+// Function to fetch and display categories or products
+function fetchAndDisplayData(db, storeName, displayFunction) {
     const store = db.transaction([storeName], "readonly").objectStore(storeName);
     handleIDBRequest(store.getAll(), (data) => {
         if (data.length === 0) {
-            fetchDataAndStore(apiURL, db, storeName).then(() => fetchAndDisplayData(db, storeName, displayFunction, apiURL));
+            const apiURL = storeName === 'categories' ? "https://app.satsweets.com/api/categories" : "https://app.satsweets.com/api/products";
+            fetchDataAndStore(apiURL, db, storeName).then(() => fetchAndDisplayData(db, storeName, displayFunction));
         } else {
             displayFunction(data, db);
         }
@@ -62,6 +63,7 @@ function displayCategories(categories, db) {
     });
 }
 
+
 function displayProducts(products) {
     const productList = document.getElementById("product-list");
     productList.innerHTML = products.map(product => `
@@ -82,20 +84,9 @@ function getAndDisplayProducts(categoryId, db) {
     }, `Failed to fetch products for category ${categoryId}:`);
 }
 
-function displayCustomers(customers) {
-    const customerSelect = document.querySelector(".cart-header select");
-    customerSelect.innerHTML = ""; // Clear existing options
-    customers.forEach(customer => {
-        const option = document.createElement("option");
-        option.value = customer.id;
-        option.textContent = customer.name;
-        customerSelect.appendChild(option);
-    });
-}
-
 // Initialization
 window.onload = function () {
-    const request = indexedDB.open("satDB", 5);
+    const request = indexedDB.open("satDB", 4);
 
     request.onupgradeneeded = function (event) {
         const db = event.target.result;
@@ -106,15 +97,11 @@ window.onload = function () {
             const productStore = db.createObjectStore("products", { keyPath: "id" });
             productStore.createIndex("category_id", "category_id", { unique: false });
         }
-        if (!db.objectStoreNames.contains("customers")) {
-            db.createObjectStore("customers", { keyPath: "id" });
-        }
     };
 
     request.onsuccess = function (event) {
         const db = event.target.result;
-        fetchAndDisplayData(db, "categories", displayCategories, "https://app.satsweets.com/api/categories");
-        fetchAndDisplayData(db, "products", displayProducts, "https://app.satsweets.com/api/products");
-        fetchAndDisplayData(db, "customers", displayCustomers, "https://app.satsweets.com/api/customers");
+        fetchAndDisplayData(db, "categories", displayCategories);
+        fetchAndDisplayData(db, "products", displayProducts);
     };
 };
