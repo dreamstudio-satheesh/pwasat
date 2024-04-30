@@ -95,7 +95,7 @@ function displayCustomers(customers) {
 
 // Initialization
 window.onload = function () {
-    const request = indexedDB.open("satDB", 4);
+    const request = indexedDB.open("satDB", 5);
 
     request.onupgradeneeded = function (event) {
         const db = event.target.result;
