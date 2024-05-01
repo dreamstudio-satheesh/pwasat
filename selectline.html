@@ -99,16 +99,18 @@
         const select = document.getElementById('selectline');
         select.innerHTML = ''; // Clear existing options
 
-        if (!data || !data.lines) { // Check if the 'lines' key is present
-            console.error("Invalid data structure received from API", data);
+        // Assuming 'data' is directly the array of lines objects
+        if (!Array.isArray(data)) {
+            console.error("Expected an array of lines, received:", data);
             return;
         }
 
-        data.lines.forEach(line => {
+        data.forEach(line => {
             const option = new Option(line.name, line.id);
             select.appendChild(option);
         });
     }
+
 
     </script>
 </body>
