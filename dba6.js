@@ -1,3 +1,5 @@
+document.getElementById('invoiceDate').valueAsDate = new Date();
+
 // Global variable to hold the database connection
 let db;
 
