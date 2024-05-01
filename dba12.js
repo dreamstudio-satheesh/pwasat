@@ -305,7 +305,7 @@ function checkout() {
     }
 
     // AJAX request to the server
-    fetch('postinvoice', {
+    fetch('https://app.satsweets.com/api/postinvoice', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
