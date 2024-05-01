@@ -14,7 +14,8 @@ const urlsToCache = [
     'https://pwa.satsweets.com/manifest.json',
     'https://pwa.satsweets.com/assets/css/bootstrap.min.css',
     'https://pwa.satsweets.com/assets/js/bootstrap.bundle.min.js',
-    'https://pwa.satsweets.com/logo.png'
+    'https://pwa.satsweets.com/logo.png',
+    'https://pwa.satsweets.com/favicon.png'
 ];
 
 self.addEventListener('install', event => {
