@@ -212,18 +212,21 @@ function updateQuantity(input, productId) {
         return;
     }
 
-    console.log(productId);
-    console.log('cart:', cart);
+    console.log("Product ID to update:", productId);
+    console.log("Cart before update:", cart);
 
     const product = cart.find(item => item.id === productId);
     if (product) {
+        console.log("Product found:", product);
         product.quantity = newQuantity;
         displayCart(); // Reflect the updated quantity in UI
         updateCartTotal();
     } else {
         console.error("Product not found");
+        console.log("All product IDs in cart:", cart.map(item => item.id));
     }
 }
+
 
 function increaseQuantity(productId) {
     const input = document.querySelector(`#quantity-${productId}`);
