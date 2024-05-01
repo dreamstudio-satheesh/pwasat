@@ -12,6 +12,8 @@ body {
     background-color: #f4f4f4;
 }
 
+
+
 .category-list {
     background-color: #fff;
     padding: 10px 0;
@@ -26,7 +28,7 @@ body {
     width: 100%;
 }
 
-.cart {
+    .cart {
     background-color: #fff;
     padding: 20px;
 }
@@ -121,6 +123,13 @@ body {
     text-align: center;
     flex: 1 1 calc(33.33% - 20px);
     /* Default for portrait mode */
+}
+
+@media (max-width: 768px) {
+    #product-list, .cart-items {
+        max-height: 400px;
+        overflow-y: scroll;
+    }
 }
 
 @media screen and (orientation: landscape) {
