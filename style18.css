@@ -138,6 +138,16 @@ body {
         font-size: 12px;
         /* Smaller font size for product name in landscape mode */
     }
+
+    #product-list {
+        max-height: 300px;
+        overflow-y: scroll;
+    }
+
+    .cart-items {
+        max-height: 200px;
+        overflow-y: scroll;
+    }
 }
 
 /* Media query for mobile devices */
