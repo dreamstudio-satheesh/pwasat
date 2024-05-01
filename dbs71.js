@@ -211,3 +211,30 @@ function decreaseQuantity(productId) {
 
 
 
+document.querySelectorAll('.cart-item').forEach(item => {
+    let touchstartX = 0;
+    let touchendX = 0;
+
+    function handleGesture() {
+        if (touchendX < touchstartX - 50) { // Swipe left
+            removeItemFromCart(item.dataset.productId);
+        }
+    }
+
+    item.addEventListener('touchstart', e => {
+        touchstartX = e.changedTouches[0].screenX;
+    });
+
+    item.addEventListener('touchend', e => {
+        touchendX = e.changedTouches[0].screenX;
+        handleGesture();
+    });
+});
+
+function removeItemFromCart(productId) {
+    const productIndex = cart.findIndex(item => item.id === parseInt(productId, 10));
+    if (productIndex !== -1) {
+        cart.splice(productIndex, 1); // Remove the item from the cart
+        displayCart(); // Update the display
+    }
+}
