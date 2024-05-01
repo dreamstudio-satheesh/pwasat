@@ -171,8 +171,8 @@
 
         request.onsuccess = function(event) {
             var db = event.target.result;
-            var transaction = db.transaction(["Customers"], "readwrite");
-            var objectStore = transaction.objectStore("Customers");
+            var transaction = db.transaction(["customers"], "readwrite");
+            var objectStore = transaction.objectStore("customers");
 
             var clearRequest = objectStore.clear();  // Clear all data in the store
 
@@ -197,8 +197,8 @@
         })
         .then(response => response.json())
         .then(customers => {
-            const transaction = db.transaction(["Customers"], "readwrite");
-            const store = transaction.objectStore("Customers");
+            const transaction = db.transaction(["customers"], "readwrite");
+            const store = transaction.objectStore("customers");
             customers.forEach(customer => {
                 store.add(customer);
             });
