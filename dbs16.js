@@ -169,6 +169,7 @@ function addToCart(productId) {
             });
         }
         displayCart();
+        updateCartTotal(); 
         
         // Optionally, uncomment the next line to log the cart to the console
         // console.log('cart:', cart);
@@ -199,7 +200,7 @@ function displayCart() {
             </div>
         `).join('');
 
-        updateCartTotal(); 
+       
     }
 }
 
@@ -215,6 +216,7 @@ function updateQuantity(input, productId) {
     if (product) {
         product.quantity = newQuantity;
         displayCart(); // Reflect the updated quantity in UI
+        updateCartTotal();
     } else {
         console.error("Product not found");
     }
