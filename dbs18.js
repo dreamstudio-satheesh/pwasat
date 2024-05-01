@@ -212,6 +212,8 @@ function updateQuantity(input, productId) {
         return;
     }
 
+    console.log(productId);
+
     const product = cart.find(item => item.id === productId);
     if (product) {
         product.quantity = newQuantity;
