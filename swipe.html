@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cart Swipe to Delete</title>
+<style>
+    .cart-item {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-top: 5px;
+    }
+</style>
+</head>
+<body>
+
+<div id="cart-items">
+    <!-- Example cart items will be dynamically inserted here -->
+</div>
+
+<script>
+// Example cart array
+let cart = [
+    { id: '1', name: 'Product 1', price: 40, quantity: 1 },
+    { id: '2', name: 'Product 2', price: 50, quantity: 1 },
+    { id: '3', name: 'Product 3', price: 30, quantity: 1 }
+];
+
+function displayCart() {
+    const container = document.getElementById('cart-items');
+    container.innerHTML = ''; // Clear existing cart items
+    cart.forEach(item => {
+        const cartItem = document.createElement('div');
+        cartItem.className = 'cart-item';
+        cartItem.dataset.productId = item.id;
+        cartItem.innerHTML = `<div>${item.name} - $${item.price} x ${item.quantity}</div>`;
+        container.appendChild(cartItem);
+
+        // Attach touch events
+        attachSwipeEvent(cartItem);
+    });
+}
+
+function attachSwipeEvent(item) {
+    let touchstartX = 0;
+    let touchendX = 0;
+
+    item.addEventListener('touchstart', e => {
+        touchstartX = e.changedTouches[0].screenX;
+    });
+
+    item.addEventListener('touchend', e => {
+        touchendX = e.changedTouches[0].screenX;
+        handleGesture(touchstartX, touchendX, item);
+    });
+}
+
+function handleGesture(startX, endX, item) {
+    const threshold = 50; // Minimum distance of swipe
+    if (startX - endX > threshold) {
+        removeItemFromCart(item.dataset.productId);
+    }
+}
+
+function removeItemFromCart(productId) {
+    cart = cart.filter(item => item.id !== productId);
+    displayCart(); // Refresh the display
+}
+
+displayCart(); // Initial display of cart items
+</script>
+
+</body>
+</html>
