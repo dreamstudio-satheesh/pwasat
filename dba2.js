@@ -206,13 +206,16 @@ function displayCart() {
 
 function updateQuantity(input, productId) {
     const newQuantity = parseInt(input.value, 10);
+    // Convert productId to a number if it's not already
+    productId = parseInt(productId, 10);
+
     if (isNaN(newQuantity) || newQuantity < 1) {
         console.error("Invalid quantity");
         input.value = cart.find(item => item.id === productId).quantity; // Reset to the last valid value
         return;
     }
 
-    console.log("Product ID to update:", productId);
+    console.log("Product ID to update (as number):", productId);
     console.log("Cart before update:", JSON.stringify(cart));
 
     const product = cart.find(item => item.id === productId);
