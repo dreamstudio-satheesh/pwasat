@@ -119,6 +119,7 @@
         });
     }
 
+
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('lineselect');
         form.addEventListener('submit', function(event) {
@@ -128,23 +129,21 @@
             const url = 'https://app.satsweets.com/api/submitline';
             const messageDiv = document.getElementById('message');
 
-            // Fetch options
             fetch(url, {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`, // Assuming you store the token in localStorage
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
                     'Accept': 'application/json'
                 }
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Handle success
                     messageDiv.textContent = 'Successfully updated the line!';
                     messageDiv.className = 'alert alert-success';
+                    clearCustomerData();  // Call function to clear customer data from IndexedDB
                 } else {
-                    // Handle errors
                     messageDiv.textContent = data.error || 'An error occurred!';
                     messageDiv.className = 'alert alert-danger';
                 }
@@ -157,6 +156,29 @@
         });
     });
 
+    function clearCustomerData() {
+        var request = indexedDB.open("satDB", 6);  // Open IndexedDB
+
+        request.onerror = function(event) {
+            console.error("Database error: " + event.target.errorCode);
+        };
+
+        request.onsuccess = function(event) {
+            var db = event.target.result;
+            var transaction = db.transaction(["Customers"], "readwrite");  // Specify your store name and mode
+            var objectStore = transaction.objectStore("Customers");
+
+            var clearRequest = objectStore.clear();  // Clear all data in the store
+
+            clearRequest.onsuccess = function(event) {
+                console.log("All customer data removed from local database.");
+            };
+
+            clearRequest.onerror = function(event) {
+                console.error("Error clearing customer data.");
+            };
+        };
+    }
 
 
     </script>
