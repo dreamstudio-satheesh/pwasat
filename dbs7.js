@@ -184,6 +184,7 @@ function displayCart() {
 function increaseQuantity(productId) {
     console.log("Increasing quantity for product ID:", productId);
     const product = cart.find(item => item.id === productId);
+    console.log(product);
     if (product) {
         console.log("Current quantity:", product.quantity);
         product.quantity += 1;
