@@ -108,8 +108,25 @@ body {
 }
 
 
+.totalitem {
+    margin-bottom: 15px;
+}
 
+.totalitem h4 {
+    padding: 7px 13px;
+    background: #F8F8F8;
+    color: #7367F0;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 50px;
 
+}
+
+.totalitem a {
+    font-size: 14px;
+    color: #EA5455;
+    font-weight: 700;
+}
 
 @media (max-width: 768px) {
     #product-list {
