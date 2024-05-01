@@ -151,28 +151,14 @@ function addToCart(productId) {
             return;
         }
 
-        const existingProduct = cart.find(item => item.id === productId);
+        const existingProduct = cart.find(item => item.id === parseInt(productId, 10));
         if (existingProduct) {
-            existingProduct.quantity += 1;  // Increase quantity
-            existingProduct.total = existingProduct.quantity * existingProduct.price;  // Update total
+            existingProduct.quantity += 1;
         } else {
-            // If the product is not already in the cart, add it with initial quantity and calculate the total
-            cart.unshift({
-                id: product.id,
-                name: product.name,
-                code: product.code,
-                price: product.price,
-                gst: product.gst || 0,  // Default gst to 0 if not present
-                hsncode: product.hsncode,
-                quantity: 1,
-                total: product.price  // Initial total (price * quantity)
-            });
+            cart.unshift({...product, quantity: 1});
         }
-        displayCart();
-        updateCartTotal(); 
-        
-        // Optionally, uncomment the next line to log the cart to the console
-        // console.log('cart:', cart);
+        displayCart();   // Update the cart display
+        updateCartTotal();  // Update the total
     };
 
     request.onerror = function (event) {
@@ -180,77 +166,37 @@ function addToCart(productId) {
     };
 }
 
-
-function displayCart() {
-    const cartItemsDiv = document.querySelector(".cart-items");
-    if (cartItemsDiv) {
-        cartItemsDiv.innerHTML = cart.map(item => `
-            <div class="cart-item">
-                <div class="cart-item-details">
-                    <span class="item-name">${item.name} ₹${item.price}</span>
-                </div>
-                <div class="quantity-controls">
-                    <button class="btn btn-sm" onclick="decreaseQuantity('${item.id}')">-</button>
-                    <input type="number" style="width:60px;" class="form-control input-sm" 
-                           value="${item.quantity}" min="1" 
-                           onchange="updateQuantity(this, '${item.id}')"
-                           id="quantity-${item.id}">
-                    <button class="btn btn-sm" onclick="increaseQuantity('${item.id}')">+</button>
-                </div>
-            </div>
-        `).join('');
-
-       
-    }
-}
-
-function updateQuantity(input, productId) {
-    const newQuantity = parseInt(input.value, 10);
-    // Convert productId to a number if it's not already
-    productId = parseInt(productId, 10);
-
-    if (isNaN(newQuantity) || newQuantity < 1) {
-        console.error("Invalid quantity");
-        input.value = cart.find(item => item.id === productId).quantity; // Reset to the last valid value
-        return;
-    }
-
-    console.log("Product ID to update (as number):", productId);
-    console.log("Cart before update:", JSON.stringify(cart));
-
-    const product = cart.find(item => item.id === productId);
-    if (product) {
-        console.log("Product found:", JSON.stringify(product));
-        product.quantity = newQuantity;
-        displayCart(); // Reflect the updated quantity in UI
-        updateCartTotal();
-    } else {
-        console.error("Product not found");
-        console.log("All product IDs in cart:", cart.map(item => item.id));
-        console.log("Type of productId:", typeof productId);
-        console.log("Type in cart:", cart.map(item => typeof item.id));
-    }
-}
-
-
 function increaseQuantity(productId) {
-    const input = document.querySelector(`#quantity-${productId}`);
-    if (input) {
-        input.value = parseInt(input.value, 10) + 1; // Increment the value shown in the input
-        updateQuantity(input, productId); // Update cart and UI
+    const product = cart.find(item => item.id === parseInt(productId, 10));
+    if (product) {
+        product.quantity += 1;
+        displayCart();  // Update the cart display
+        updateCartTotal();  // Update the total
     }
 }
 
 function decreaseQuantity(productId) {
-    const input = document.querySelector(`#quantity-${productId}`);
-    if (input && parseInt(input.value, 10) > 1) {
-        input.value = parseInt(input.value, 10) - 1; // Decrement the value shown in the input
-        updateQuantity(input, productId); // Update cart and UI
+    const product = cart.find(item => item.id === parseInt(productId, 10));
+    if (product && product.quantity > 1) {
+        product.quantity -= 1;
+    } else if (product) {
+        cart.splice(cart.indexOf(product), 1);
+    }
+    displayCart();  // Update the cart display
+    updateCartTotal();  // Update the total
+}
+
+function updateQuantity(input, productId) {
+    const newQuantity = parseInt(input.value, 10);
+    const product = cart.find(item => item.id === productId);
+    if (product) {
+        product.quantity = newQuantity;
+        displayCart();  // Update the cart display
+        updateCartTotal();  // Update the total
     }
 }
 
 function updateCartTotal() {
-    
     let totalCartAmount = 0; // Initialize total amount
 
     // Iterate over each item in the cart to sum up the total
@@ -262,5 +208,3 @@ function updateCartTotal() {
     const totalDiv = document.querySelector(".cart-total h5");
     totalDiv.textContent = `Total: ₹${totalCartAmount.toFixed(2)}`;
 }
-
-
