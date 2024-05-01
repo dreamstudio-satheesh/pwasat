@@ -139,6 +139,31 @@ window.onload = function () {
 
 const cart = [];
 
+
+function displayCart() {
+    const cartItemsDiv = document.querySelector(".cart-items");
+    if (cartItemsDiv) {
+        cartItemsDiv.innerHTML = cart.map(item => `
+            <div class="cart-item">
+                <div class="cart-item-details">
+                    <span class="item-name">${item.name} ₹${item.price}</span>
+                </div>
+                <div class="quantity-controls">
+                    <button class="btn btn-sm" onclick="decreaseQuantity('${item.id}')">-</button>
+                    <input type="number" style="width:60px;" class="form-control input-sm" 
+                           value="${item.quantity}" min="1" 
+                           onchange="updateQuantity(this, '${item.id}')"
+                           id="quantity-${item.id}">
+                    <button class="btn btn-sm" onclick="increaseQuantity('${item.id}')">+</button>
+                </div>
+            </div>
+        `).join('');
+
+       
+    }
+}
+
+
 function addToCart(productId) {
     const transaction = db.transaction(['products'], 'readonly');
     const store = transaction.objectStore('products');
@@ -208,3 +233,4 @@ function updateCartTotal() {
     const totalDiv = document.querySelector(".cart-total h5");
     totalDiv.textContent = `Total: ₹${totalCartAmount.toFixed(2)}`;
 }
+
