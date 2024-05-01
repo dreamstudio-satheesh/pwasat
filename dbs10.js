@@ -158,6 +158,7 @@ function addToCart(productId) {
             cart.unshift({...product, quantity: 1});
         }
         displayCart();
+        console.log('cart:', cart);
     };
 
     request.onerror = function (event) {
