@@ -67,12 +67,7 @@ body {
     padding: 20px;
 }
 
-.cart-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
+
 
 .cart-item {
     display: flex;
