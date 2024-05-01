@@ -272,3 +272,65 @@ function updateCartTotal() {
     totalItems.textContent = "Total items: " + cart.length; // Display the number of items in the cart
 }
 
+
+
+
+
+function checkout() {
+    // Gather invoice data
+    const invoiceData = {
+        customer_id: document.querySelector(".customerslist select").value,
+        invoice_date: document.getElementById('invoiceDate').value,
+        cartlist: cart.map(item => ({
+            code: item.code,  // Assuming each product has a 'code' attribute
+            name: item.name,
+            price: item.price,
+            gst: item.gst,  // Assuming there's a GST value in the product details
+            hsncode: item.hsncode,  // Assuming there's an HSN code in the product details
+            quantity: item.quantity,
+            total: item.quantity * item.price
+        })),
+        total: cart.reduce((sum, item) => sum + (item.quantity * item.price), 0)
+    };
+
+    // Make sure there are items in the cart and a customer selected
+    if (!invoiceData.cartlist.length) {
+        alert("Your cart is empty!");
+        return;
+    }
+
+    if (!invoiceData.customer_id) {
+        alert("Please select a customer before checking out.");
+        return;
+    }
+
+    // AJAX request to the server
+    fetch('postinvoice', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("token")}`  // Include the authorization token if needed
+        },
+        body: JSON.stringify(invoiceData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not OK');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Invoice posted successfully:', data);
+        alert('Invoice has been successfully created!');
+        clearCart();  // Clear the cart after posting
+    })
+    .catch(error => {
+        console.error('Error posting invoice:', error);
+        alert('Failed to create invoice: ' + error.message);
+    });
+}
+
+// Add event listener to the checkout button
+document.getElementById('checkout').addEventListener('click', checkout);
+
