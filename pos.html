@@ -77,13 +77,32 @@
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="tom-select.complete.min.js"></script>
     <script>
-    new TomSelect('#select-repo',{
+    var customerSelect = new TomSelect('.customerslist select',{
         create: false,
         sortField: {
             field: "text",
             direction: "asc"
         }
     });
+
+
+    function displayCustomers(customers) {
+    // Clear existing options using Tom Select API
+    customerSelect.clearOptions();
+
+    // Add new options
+    customers.forEach(customer => {
+        customerSelect.addOption({
+            value: customer.id,
+            text: customer.name
+        });
+    });
+
+    // Refresh the select dropdown to show new options
+    customerSelect.refreshOptions();
+}
+</script>
+
     </script>
 </body>
 

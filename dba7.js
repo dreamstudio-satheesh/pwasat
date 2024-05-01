@@ -85,7 +85,23 @@ function displayProducts(products) {
 }
 
 
-function displayCustomers(customers) {
+/* function displayCustomers(customers) {
+    // Clear existing options using Tom Select API
+    customerSelect.clearOptions();
+
+    // Add new options
+    customers.forEach(customer => {
+        customerSelect.addOption({
+            value: customer.id,
+            text: customer.name
+        });
+    });
+
+    // Refresh the select dropdown to show new options
+    customerSelect.refreshOptions();
+} */
+
+/* function displayCustomers(customers) {
     const customerSelect = document.querySelector(".customerslist select");
     customerSelect.innerHTML = "";
     customers.forEach(customer => {
@@ -94,7 +110,7 @@ function displayCustomers(customers) {
         option.textContent = customer.name;
         customerSelect.appendChild(option);
     });
-}
+} */
 
 function getAndDisplayProducts(categoryId) {
     const transaction = db.transaction(["products"], "readonly");
