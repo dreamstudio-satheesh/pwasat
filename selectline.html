@@ -62,6 +62,11 @@
                         
                        
                     </div>
+
+                    <div id="customerList" class="customer-list">
+                        <ul id="customerItems"></ul>
+                    </div>
+                    
                 </div>
             </div>
            
@@ -120,6 +125,7 @@
     }
 
 
+   
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('lineselect');
         form.addEventListener('submit', function(event) {
@@ -142,7 +148,7 @@
                 if (data.success) {
                     messageDiv.textContent = 'Successfully updated the line!';
                     messageDiv.className = 'alert alert-success';
-                    clearCustomerData();  // Call function to clear customer data from IndexedDB
+                    clearCustomerData();
                 } else {
                     messageDiv.textContent = data.error || 'An error occurred!';
                     messageDiv.className = 'alert alert-danger';
@@ -157,7 +163,7 @@
     });
 
     function clearCustomerData() {
-        var request = indexedDB.open("satDB", 6);  // Open IndexedDB
+        var request = indexedDB.open("YourDatabaseName", 1);  // Open IndexedDB
 
         request.onerror = function(event) {
             console.error("Database error: " + event.target.errorCode);
@@ -165,13 +171,14 @@
 
         request.onsuccess = function(event) {
             var db = event.target.result;
-            var transaction = db.transaction(["Customers"], "readwrite");  // Specify your store name and mode
+            var transaction = db.transaction(["Customers"], "readwrite");
             var objectStore = transaction.objectStore("Customers");
 
             var clearRequest = objectStore.clear();  // Clear all data in the store
 
             clearRequest.onsuccess = function(event) {
                 console.log("All customer data removed from local database.");
+                fetchAndStoreCustomers(db); // Fetch and store customers after clearing
             };
 
             clearRequest.onerror = function(event) {
@@ -180,6 +187,39 @@
         };
     }
 
+    function fetchAndStoreCustomers(db) {
+        fetch('https://app.satsweets.com/api/customers', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(customers => {
+            const transaction = db.transaction(["Customers"], "readwrite");
+            const store = transaction.objectStore("Customers");
+            customers.forEach(customer => {
+                store.add(customer);
+            });
+            transaction.oncomplete = () => {
+                console.log('All customers added to the local database.');
+                displayCustomers(customers); // Display customers after storing them
+            };
+        })
+        .catch(error => console.error('Failed to fetch customers:', error));
+    }
+
+    function displayCustomers(customers) {
+        const list = document.getElementById('customerItems');
+        list.innerHTML = ''; // Clear previous list items
+
+        customers.forEach(customer => {
+            const item = document.createElement('li');
+            item.textContent = `${customer.name}`; // Assuming 'name' is a property of customer
+            list.appendChild(item);
+        });
+    }
 
     </script>
 </body>
