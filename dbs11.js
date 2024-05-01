@@ -169,6 +169,7 @@ function addToCart(productId) {
             });
         }
         displayCart();
+        updateCartTotal();
         // Optionally, uncomment the next line to log the cart to the console
         // console.log('cart:', cart);
     };
@@ -181,33 +182,37 @@ function addToCart(productId) {
 
 function displayCart() {
     const cartItemsDiv = document.querySelector(".cart-items");
-    let totalCartAmount = 0; // Variable to store the total amount of the cart
-
-    // Clear the current contents of the cart display
-    cartItemsDiv.innerHTML = "";
-
-    // Generate HTML for each item in the cart
-    cart.map(item => {
-        const itemTotal = item.quantity * item.price;
-        totalCartAmount += itemTotal;  // Add the item's total to the cart total
-
-        return `
+    if (cartItemsDiv) {
+        cartItemsDiv.innerHTML = cart.map(item => `
             <div class="cart-item">
-                <span class="item-name">${item.name}</span>
-                <span class="item-price">₹${item.price.toFixed(2)}</span>
-                <span class="item-quantity">${item.quantity}</span>
-                <span class="item-total">₹${itemTotal.toFixed(2)}</span>
-                <button onclick="decreaseQuantity('${item.id}')">-</button>
-                <input type="number" class="form-control" value="${item.quantity}" readonly>
-                <button onclick="increaseQuantity('${item.id}')">+</button>
+                <div class="cart-item-details">
+                    <span class="item-name">${item.name} ₹${item.price}</span>
+                </div>
+                <div class="quantity-controls">
+                    <button class="btn btn-sm" onclick="decreaseQuantity('${item.id}')">-</button>
+                    <input type="number" style="width:60px;" class="form-control input-sm" 
+                           value="${item.quantity}" min="1" 
+                           onchange="updateQuantity(this, '${item.id}')">
+                    <button class="btn btn-sm" onclick="increaseQuantity('${item.id}')">+</button>
+                </div>
             </div>
-        `;
-    }).forEach(itemHTML => cartItemsDiv.innerHTML += itemHTML);  // Append each item's HTML to the cart display
+        `).join('');
+    }
+}
 
-    // Update the total display
+function updateCartTotal() {
+    let totalCartAmount = 0; // Initialize total amount
+
+    // Iterate over each item in the cart to sum up the total
+    cart.forEach(item => {
+        totalCartAmount += item.quantity * item.price; // Calculate total for each item and add to totalCartAmount
+    });
+
+    // Select the total display element and update its content
     const totalDiv = document.querySelector(".cart-total h5");
     totalDiv.textContent = `Total: ₹${totalCartAmount.toFixed(2)}`;
 }
+
 
 
 function increaseQuantity(productId) {
@@ -218,6 +223,7 @@ function increaseQuantity(productId) {
         product.quantity += 1;
         product.total = product.quantity * product.price;  // Update total
         displayCart();
+        updateCartTotal();
     } else {
         console.error("Product not found in cart with ID:", productId);
     }
@@ -237,6 +243,7 @@ function decreaseQuantity(productId) {
         console.error("Product not found in cart with ID:", productId);
     }
     displayCart();
+    updateCartTotal();
 }
 
 function updateQuantity(input, productId) {
@@ -252,6 +259,7 @@ function updateQuantity(input, productId) {
         product.quantity = newQuantity;
         product.total = product.quantity * product.price;  // Update total
         displayCart();  // Refresh the display with updated quantities
+        updateCartTotal();
     } else {
         console.error("Product not found");
     }
