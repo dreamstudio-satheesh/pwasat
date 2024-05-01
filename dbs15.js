@@ -169,6 +169,7 @@ function addToCart(productId) {
             });
         }
         displayCart();
+        updateCartTotal();
         
         // Optionally, uncomment the next line to log the cart to the console
         // console.log('cart:', cart);
@@ -192,16 +193,48 @@ function displayCart() {
                     <button class="btn btn-sm" onclick="decreaseQuantity('${item.id}')">-</button>
                     <input type="number" style="width:60px;" class="form-control input-sm" 
                            value="${item.quantity}" min="1" 
-                           onchange="updateQuantity(this, '${item.id}')">
+                           onchange="updateQuantity(this, '${item.id}')"
+                           id="quantity-${item.id}">
                     <button class="btn btn-sm" onclick="increaseQuantity('${item.id}')">+</button>
                 </div>
             </div>
         `).join('');
-
-        updateCartTotal();
     }
 }
 
+function updateQuantity(input, productId) {
+    const newQuantity = parseInt(input.value, 10);
+    if (isNaN(newQuantity) || newQuantity < 1) {
+        console.error("Invalid quantity");
+        input.value = cart.find(item => item.id === productId).quantity; // Reset to the last valid value
+        return;
+    }
+
+    const product = cart.find(item => item.id === productId);
+    if (product) {
+        product.quantity = newQuantity;
+        displayCart(); // Reflect the updated quantity in UI
+        updateCartTotal();
+    } else {
+        console.error("Product not found");
+    }
+}
+
+function increaseQuantity(productId) {
+    const input = document.querySelector(`#quantity-${productId}`);
+    if (input) {
+        input.value = parseInt(input.value, 10) + 1; // Increment the value shown in the input
+        updateQuantity(input, productId); // Update cart and UI
+    }
+}
+
+function decreaseQuantity(productId) {
+    const input = document.querySelector(`#quantity-${productId}`);
+    if (input && parseInt(input.value, 10) > 1) {
+        input.value = parseInt(input.value, 10) - 1; // Decrement the value shown in the input
+        updateQuantity(input, productId); // Update cart and UI
+    }
+}
 function updateCartTotal() {
     let totalCartAmount = 0; // Initialize total amount
 
@@ -216,54 +249,3 @@ function updateCartTotal() {
 }
 
 
-
-function increaseQuantity(productId) {
-    console.log("Increasing quantity for product ID:", productId);
-    const product = cart.find(item => item.id === parseInt(productId, 10));  // Adjust type as necessary
-    console.log("Product found:", product);
-    if (product) {
-        product.quantity += 1;
-        product.total = product.quantity * product.price;  // Update total
-        displayCart();
-        
-    } else {
-        console.error("Product not found in cart with ID:", productId);
-    }
-}
-
-function decreaseQuantity(productId) {
-    console.log("Decreasing quantity for product ID:", productId);
-    const product = cart.find(item => item.id === parseInt(productId, 10));  // Adjust type as necessary
-    if (product && product.quantity > 1) {
-        product.quantity -= 1;
-        product.total = product.quantity * product.price;  // Update total
-    } else if (product) {
-        // Remove product if quantity reaches 0 or 1
-        console.log("Removing product from cart.");
-        cart.splice(cart.indexOf(product), 1);
-    } else {
-        console.error("Product not found in cart with ID:", productId);
-    }
-    displayCart();
-    
-}
-
-function updateQuantity(input, productId) {
-    const newQuantity = parseInt(input.value, 10);
-    if (isNaN(newQuantity) || newQuantity < 1) {
-        console.error("Invalid quantity");
-        displayCart();  // Reset to previous valid state
-        
-        return;
-    }
-
-    const product = cart.find(item => item.id === productId);
-    if (product) {
-        product.quantity = newQuantity;
-        product.total = product.quantity * product.price;  // Update total
-        displayCart();  // Refresh the display with updated quantities
-        
-    } else {
-        console.error("Product not found");
-    }
-}
