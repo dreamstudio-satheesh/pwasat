@@ -167,18 +167,24 @@ function addToCart(productId) {
 
 function displayCart() {
     const cartItemsDiv = document.querySelector(".cart-items");
-    cartItemsDiv.innerHTML = cart.map(item => `
-        <div class="cart-item">
-            <div class="cart-item-details">
-                <span class="item-name">${item.name} ₹${item.price}</span>
+    // Ensure cartItemsDiv exists before attempting to modify it
+    if (cartItemsDiv) {
+        cartItemsDiv.innerHTML = cart.map(item => `
+            <div class="cart-item" data-product-id="${item.id}">
+                <div class="cart-item-details">
+                    <span class="item-name">${item.name} ₹${item.price}</span>
+                </div>
+                <div class="quantity-controls">
+                    <button class="btn btn-sm" onclick="decreaseQuantity('${item.id}')">-</button>
+                    <input type="number" style="width:60px;" class="form-control input-sm" value="${item.quantity}" readonly>
+                    <button class="btn btn-sm" onclick="increaseQuantity('${item.id}')">+</button>
+                </div>
             </div>
-            <div class="quantity-controls">
-                <button class="btn btn-sm" onclick="decreaseQuantity('${item.id}')">-</button>
-                <input type="number" style="width:60px;" class="form-control input-sm" value="${item.quantity}" readonly>
-                <button class="btn btn-sm" onclick="increaseQuantity('${item.id}')">+</button>
-            </div>
-        </div>
-    `).join('');
+        `).join('');
+
+        // Attach swipe event listeners after updating the HTML
+        attachSwipeEvents();
+    }
 }
 
 function increaseQuantity(productId) {
@@ -211,30 +217,33 @@ function decreaseQuantity(productId) {
 
 
 
-document.querySelectorAll('.cart-item').forEach(item => {
-    let touchstartX = 0;
-    let touchendX = 0;
+function attachSwipeEvents() {
+    document.querySelectorAll('.cart-item').forEach(item => {
+        let touchstartX = 0;
+        let touchendX = 0;
 
-    function handleGesture() {
-        if (touchendX < touchstartX - 50) { // Swipe left
-            removeItemFromCart(item.dataset.productId);
-        }
-    }
+        item.addEventListener('touchstart', e => {
+            touchstartX = e.changedTouches[0].screenX;
+        });
 
-    item.addEventListener('touchstart', e => {
-        touchstartX = e.changedTouches[0].screenX;
+        item.addEventListener('touchend', e => {
+            touchendX = e.changedTouches[0].screenX;
+            handleSwipeGesture(touchstartX, touchendX, item);
+        });
     });
+}
 
-    item.addEventListener('touchend', e => {
-        touchendX = e.changedTouches[0].screenX;
-        handleGesture();
-    });
-});
-
-function removeItemFromCart(productId) {
-    const productIndex = cart.findIndex(item => item.id === parseInt(productId, 10));
-    if (productIndex !== -1) {
-        cart.splice(productIndex, 1); // Remove the item from the cart
-        displayCart(); // Update the display
+function handleSwipeGesture(startX, endX, item) {
+    const swipeThreshold = 50; // Minimum distance for a swipe gesture
+    if (endX - startX > swipeThreshold) { // Detect swipe right
+        const productId = item.dataset.productId;
+        removeItemFromCart(productId);
     }
 }
+
+function removeItemFromCart(productId) {
+    cart = cart.filter(item => item.id !== productId); // Remove the item from the cart array
+    displayCart(); // Refresh the display
+}
+
+
