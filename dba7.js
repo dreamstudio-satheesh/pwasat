@@ -157,6 +157,12 @@ window.onload = function () {
 
 const cart = [];
 
+function clearCart() {
+    cart = []; // Clear the cart array
+    displayCart();   // Update the cart display
+    updateCartTotal();  // Update the total
+}
+
 
 function displayCart() {
     const cartItemsDiv = document.querySelector(".cart-items");
@@ -250,5 +256,9 @@ function updateCartTotal() {
     // Select the total display element and update its content
     const totalDiv = document.querySelector(".cart-total h5");
     totalDiv.textContent = `Total: ₹${totalCartAmount.toFixed(2)}`;
+
+
+    const totalItems = document.getElementById("totalItems");
+    totalItems.textContent = "Total items: " + cart.length; // Display the number of items in the cart
 }
 
