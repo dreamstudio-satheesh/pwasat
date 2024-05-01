@@ -94,19 +94,19 @@
         });
     });
 
+    
     function populateSelect(data) {
         const select = document.getElementById('selectline');
         select.innerHTML = ''; // Clear existing options
 
-        if (!data || !data.lines) {
-            console.error("Invalid data structure received from API");
+        if (!data || !data.lines) { // Check if the 'lines' key is present
+            console.error("Invalid data structure received from API", data);
             return;
         }
 
-        // Assuming 'lines' is an array of objects with 'id' and 'name'
         data.lines.forEach(line => {
-            const option = new Option(line.name, line.id); // Create new option element
-            select.appendChild(option); // Append the option to the select element
+            const option = new Option(line.name, line.id);
+            select.appendChild(option);
         });
     }
 
