@@ -85,21 +85,7 @@ function displayProducts(products) {
 }
 
 
-/* function displayCustomers(customers) {
-    // Clear existing options using Tom Select API
-    customerSelect.clearOptions();
 
-    // Add new options
-    customers.forEach(customer => {
-        customerSelect.addOption({
-            value: customer.id,
-            text: customer.name
-        });
-    });
-
-    // Refresh the select dropdown to show new options
-    customerSelect.refreshOptions();
-} */
 
 /* function displayCustomers(customers) {
     const customerSelect = document.querySelector(".customerslist select");

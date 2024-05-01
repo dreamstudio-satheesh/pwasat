@@ -42,6 +42,16 @@
             <div class="col-12 col-md-6 col-lg-3 mb-3">
                 <div class="card">
                     <div class="card-body">
+
+                        <form action="" method="post">
+                            <div class="form-group">
+                                <label for="">Select Line</label>
+                                <select name="line" id="selectline" class="form-control form-select">
+
+                                </select>
+                            </div>
+
+                        </form>
                        
                     </div>
                 </div>
@@ -52,5 +62,54 @@
 
     <script src="auth.js"></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        const apiUrl = 'https://app.satsweets.com/api/getlines';
+        const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+
+        if (!token) {
+            console.error("No token found in localStorage");
+            return; // Stop execution if no token is found
+        }
+
+        fetch(apiUrl, {
+            method: 'GET', // The method is GET
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) { // Check if response is successful (i.e., HTTP status 200)
+                throw new Error('Network response was not ok');
+            }
+            return response.json(); // Parse JSON data from the response
+        })
+        .then(data => {
+            populateSelect(data); // Function to populate the select element with data
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    });
+
+    function populateSelect(data) {
+        const select = document.getElementById('selectline');
+        select.innerHTML = ''; // Clear existing options
+
+        if (!data || !data.lines) {
+            console.error("Invalid data structure received from API");
+            return;
+        }
+
+        // Assuming 'lines' is an array of objects with 'id' and 'name'
+        data.lines.forEach(line => {
+            const option = new Option(line.name, line.id); // Create new option element
+            select.appendChild(option); // Append the option to the select element
+        });
+    }
+
+    </script>
 </body>
 </html>
