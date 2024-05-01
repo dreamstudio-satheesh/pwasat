@@ -243,19 +243,27 @@ function decreaseQuantity(productId) {
 }
 
 function updateQuantity(input, productId) {
-    const newQuantity = parseInt(input.value, 10);
+    const newQuantity = parseInt(input.value, 10);  // Parse the input value
+    if (isNaN(newQuantity) || newQuantity < 1) {
+        console.error('Invalid input. Quantity must be 1 or greater.');
+
+        input.value = 1;  // Reset the value to 1 if input is invalid
+        alert('Invaild input');
+        return;  // Stop further processing
+    }
+
     const product = cart.find(item => item.id === parseInt(productId, 10));
-    
-        if (product && product.quantity > 1) {
-        product.quantity = newQuantity;
-        displayCart();  // Update the cart display
-        updateCartTotal();  // Update the total
-        } else if (product) {
+    if (!product) {
+        console.error('Product not found in cart:', productId);
+        return;
+    }
 
-            console.log('Product Quantity invaild :', product.quantity);
-        }
-
+    // Update the product quantity if everything is valid
+    product.quantity = newQuantity;
+    displayCart();  // Update the cart display
+    updateCartTotal();  // Update the total
 }
+
 
 function updateCartTotal() {
     let totalCartAmount = 0; // Initialize total amount
