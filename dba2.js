@@ -213,17 +213,19 @@ function updateQuantity(input, productId) {
     }
 
     console.log("Product ID to update:", productId);
-    console.log("Cart before update:", cart);
+    console.log("Cart before update:", JSON.stringify(cart));
 
     const product = cart.find(item => item.id === productId);
     if (product) {
-        console.log("Product found:", product);
+        console.log("Product found:", JSON.stringify(product));
         product.quantity = newQuantity;
         displayCart(); // Reflect the updated quantity in UI
         updateCartTotal();
     } else {
         console.error("Product not found");
         console.log("All product IDs in cart:", cart.map(item => item.id));
+        console.log("Type of productId:", typeof productId);
+        console.log("Type in cart:", cart.map(item => typeof item.id));
     }
 }
 
