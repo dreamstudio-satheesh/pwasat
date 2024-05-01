@@ -183,28 +183,31 @@ function displayCart() {
 
 function increaseQuantity(productId) {
     console.log("Increasing quantity for product ID:", productId);
-    const product = cart.find(item => item.id === productId);
-    console.log(product);
+    // Ensure the ID is converted to the correct type if necessary
+    const product = cart.find(item => item.id === parseInt(productId, 10)); // or String(productId) based on your ID type
+    console.log("Product found:", product);
     if (product) {
-        console.log("Current quantity:", product.quantity);
         product.quantity += 1;
-        console.log("New quantity:", product.quantity);
         displayCart();
+    } else {
+        console.error("Product not found in cart with ID:", productId);
     }
 }
 
 function decreaseQuantity(productId) {
     console.log("Decreasing quantity for product ID:", productId);
-    const product = cart.find(item => item.id === productId);
+    const product = cart.find(item => item.id === parseInt(productId, 10)); // Adjust type as necessary
     if (product && product.quantity > 1) {
-        console.log("Current quantity:", product.quantity);
         product.quantity -= 1;
-        console.log("New quantity:", product.quantity);
-    } else {
+    } else if (product) {
+        // Remove product if quantity reaches 0 or 1
         console.log("Removing product from cart.");
         cart.splice(cart.indexOf(product), 1);
+    } else {
+        console.error("Product not found in cart with ID:", productId);
     }
     displayCart();
 }
+
 
 
