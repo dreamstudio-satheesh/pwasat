@@ -213,6 +213,7 @@ function updateQuantity(input, productId) {
     }
 
     console.log(productId);
+    console.log('cart:', cart);
 
     const product = cart.find(item => item.id === productId);
     if (product) {
