@@ -169,7 +169,7 @@ function addToCart(productId) {
             });
         }
         displayCart();
-        updateCartTotal();
+        
         // Optionally, uncomment the next line to log the cart to the console
         // console.log('cart:', cart);
     };
@@ -197,6 +197,8 @@ function displayCart() {
                 </div>
             </div>
         `).join('');
+
+        updateCartTotal();
     }
 }
 
@@ -223,7 +225,7 @@ function increaseQuantity(productId) {
         product.quantity += 1;
         product.total = product.quantity * product.price;  // Update total
         displayCart();
-        updateCartTotal();
+        
     } else {
         console.error("Product not found in cart with ID:", productId);
     }
@@ -243,7 +245,7 @@ function decreaseQuantity(productId) {
         console.error("Product not found in cart with ID:", productId);
     }
     displayCart();
-    updateCartTotal();
+    
 }
 
 function updateQuantity(input, productId) {
@@ -251,7 +253,7 @@ function updateQuantity(input, productId) {
     if (isNaN(newQuantity) || newQuantity < 1) {
         console.error("Invalid quantity");
         displayCart();  // Reset to previous valid state
-        updateCartTotal();
+        
         return;
     }
 
@@ -260,7 +262,7 @@ function updateQuantity(input, productId) {
         product.quantity = newQuantity;
         product.total = product.quantity * product.price;  // Update total
         displayCart();  // Refresh the display with updated quantities
-        updateCartTotal();
+        
     } else {
         console.error("Product not found");
     }
