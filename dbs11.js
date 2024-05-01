@@ -153,18 +153,31 @@ function addToCart(productId) {
 
         const existingProduct = cart.find(item => item.id === productId);
         if (existingProduct) {
-            existingProduct.quantity += 1;
+            existingProduct.quantity += 1;  // Increase quantity
+            existingProduct.total = existingProduct.quantity * existingProduct.price;  // Update total
         } else {
-            cart.unshift({...product, quantity: 1});
+            // If the product is not already in the cart, add it with initial quantity and calculate the total
+            cart.unshift({
+                id: product.id,
+                name: product.name,
+                code: product.code,
+                price: product.price,
+                gst: product.gst || 0,  // Default gst to 0 if not present
+                hsncode: product.hsncode,
+                quantity: 1,
+                total: product.price  // Initial total (price * quantity)
+            });
         }
         displayCart();
-        console.log('cart:', cart);
+        // Optionally, uncomment the next line to log the cart to the console
+        // console.log('cart:', cart);
     };
 
     request.onerror = function (event) {
         console.error("Error fetching product from IndexedDB:", event.target.error);
     };
 }
+
 
 function displayCart() {
     const cartItemsDiv = document.querySelector(".cart-items");
@@ -189,11 +202,11 @@ function displayCart() {
 
 function increaseQuantity(productId) {
     console.log("Increasing quantity for product ID:", productId);
-    // Ensure the ID is converted to the correct type if necessary
-    const product = cart.find(item => item.id === parseInt(productId, 10)); // or String(productId) based on your ID type
+    const product = cart.find(item => item.id === parseInt(productId, 10));  // Adjust type as necessary
     console.log("Product found:", product);
     if (product) {
         product.quantity += 1;
+        product.total = product.quantity * product.price;  // Update total
         displayCart();
     } else {
         console.error("Product not found in cart with ID:", productId);
@@ -202,9 +215,10 @@ function increaseQuantity(productId) {
 
 function decreaseQuantity(productId) {
     console.log("Decreasing quantity for product ID:", productId);
-    const product = cart.find(item => item.id === parseInt(productId, 10)); // Adjust type as necessary
+    const product = cart.find(item => item.id === parseInt(productId, 10));  // Adjust type as necessary
     if (product && product.quantity > 1) {
         product.quantity -= 1;
+        product.total = product.quantity * product.price;  // Update total
     } else if (product) {
         // Remove product if quantity reaches 0 or 1
         console.log("Removing product from cart.");
@@ -215,20 +229,19 @@ function decreaseQuantity(productId) {
     displayCart();
 }
 
-
-
 function updateQuantity(input, productId) {
     const newQuantity = parseInt(input.value, 10);
     if (isNaN(newQuantity) || newQuantity < 1) {
         console.error("Invalid quantity");
-        displayCart(); // Reset to previous valid state
+        displayCart();  // Reset to previous valid state
         return;
     }
 
     const product = cart.find(item => item.id === productId);
     if (product) {
         product.quantity = newQuantity;
-        displayCart(); // Refresh the display with updated quantities
+        product.total = product.quantity * product.price;  // Update total
+        displayCart();  // Refresh the display with updated quantities
     } else {
         console.error("Product not found");
     }
