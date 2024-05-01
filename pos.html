@@ -95,6 +95,11 @@
     <script src="jquery.min.js"></script>  <!-- Select2 depends on jQuery -->
     <script src="select2.min.js"></script>
     <script>
+        if (navigator.serviceWorker.controller) {
+            const token = localStorage.getItem("token");
+            navigator.serviceWorker.controller.postMessage({type: 'SET_TOKEN', token});
+        }
+
         $(document).ready(function() {
             $('.customerslist select').select2({
                 placeholder: "Select a customer",

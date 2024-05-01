@@ -28,20 +28,35 @@ self.addEventListener('install', event => {
     );
 });
 
+let authToken = null;
+
+self.addEventListener('message', event => {
+    if (event.data && event.data.type === 'SET_TOKEN') {
+        authToken = event.data.token;
+    }
+});
+
 self.addEventListener('fetch', event => {
     const requestUrl = new URL(event.request.url);
 
-    // Define a strategy for caching product thumbnails
     if (requestUrl.origin === 'https://app.satsweets.com' && requestUrl.pathname.startsWith('/storage/')) {
         event.respondWith(
             caches.match(event.request).then(cachedResponse => {
                 if (cachedResponse) {
-                    // If the image is already cached, return it
                     return cachedResponse;
                 }
 
-                // Otherwise, fetch the image with CORS, cache it, and return it
-                return fetch(event.request, { mode: 'cors' }).then(response => {
+                const headers = new Headers(event.request.headers);
+                if (authToken) {
+                    headers.append('Authorization', `Bearer ${authToken}`);
+                }
+
+                const modifiedRequest = new Request(event.request, {
+                    mode: 'cors',
+                    headers: headers
+                });
+
+                return fetch(modifiedRequest).then(response => {
                     return caches.open(CACHE_NAME).then(cache => {
                         cache.put(event.request, response.clone());
                         return response;
@@ -50,14 +65,23 @@ self.addEventListener('fetch', event => {
             })
         );
     } else {
-        // For other requests, try to fetch from network first, then fallback to cache
+        const headers = new Headers(event.request.headers);
+        if (authToken) {
+            headers.append('Authorization', `Bearer ${authToken}`);
+        }
+
+        const modifiedRequest = new Request(event.request, {
+            headers: headers
+        });
+
         event.respondWith(
-            fetch(event.request).catch(() => {
+            fetch(modifiedRequest).catch(() => {
                 return caches.match(event.request);
             })
         );
     }
 });
+
 
 self.addEventListener('activate', event => {
     var cacheAllowlist = [CACHE_NAME];
