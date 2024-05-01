@@ -7,6 +7,7 @@
     <title>POS System Interface</title>
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style18.css">
+    <link rel="stylesheet" href="tom-select.css">
 </head>
 
 <body>
@@ -46,7 +47,7 @@
             <div class="col-lg-4">
                 <div class="cart">
                     <div class="cart-header customerslist">
-                        <select class="form-select">
+                        <select id="select-repo" class="form-select">
                             <option>Walk-in Customer</option>
                             <!-- Customer options -->
                         </select>
@@ -74,6 +75,16 @@
     <script src="dba7.js"></script>
     <script src="auth.js"></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="tom-select.complete.min.js"></script>
+    <script>
+    new TomSelect('#select-repo',{
+        create: false,
+        sortField: {
+            field: "text",
+            direction: "asc"
+        }
+    });
+    </script>
 </body>
 
 </html>
