@@ -239,6 +239,8 @@ function decreaseQuantity(productId) {
 }
 
 function updateCartTotal() {
+
+    console.log('update cart total called');
     let totalCartAmount = 0; // Initialize total amount
 
     // Iterate over each item in the cart to sum up the total
