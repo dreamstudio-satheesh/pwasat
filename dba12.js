@@ -228,6 +228,8 @@ function increaseQuantity(productId) {
         product.quantity += 1;
         displayCart();  // Update the cart display
         updateCartTotal();  // Update the total
+
+        addCartSound.play();
     }
 }
 
@@ -240,6 +242,8 @@ function decreaseQuantity(productId) {
     }
     displayCart();  // Update the cart display
     updateCartTotal();  // Update the total
+
+    addCartSound.play();
 }
 
 function updateQuantity(input, productId) {
