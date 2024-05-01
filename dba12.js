@@ -331,6 +331,5 @@ function checkout() {
     });
 }
 
-// Add event listener to the checkout button
-document.getElementById('checkout').addEventListener('click', checkout);
+
 
