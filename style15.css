@@ -12,7 +12,23 @@ body {
     background-color: #f4f4f4;
 }
 
+#categories-nav {
+    display: flex;          /* Enables Flexbox */
+    flex-wrap: nowrap;      /* Prevents items from wrapping onto the next line */
+    overflow-x: auto;       /* Enables horizontal scrolling */
+    justify-content: flex-start; /* Aligns items to the start of the container */
+    align-items: center;    /* Vertically align items in the center */
+    padding: 10px 0;        /* Adds padding above and below the container */
+}
 
+.category {
+    margin: 5px;            /* Adds space around each category */
+    padding: 8px 16px;      /* Padding inside each category */
+    background-color: #f4f4f4; /* Background color for categories */
+    border-radius: 5px;     /* Rounded corners for categories */
+    cursor: pointer;        /* Cursor pointer to indicate clickable items */
+    white-space: nowrap;    /* Prevents text from wrapping */
+}
 
 .category-list {
     background-color: #fff;
@@ -20,9 +36,27 @@ body {
     margin-bottom: 20px;
 }
 
-.product {
-    margin-bottom: 15px;
+#product-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: 5px;
 }
+
+.product {
+    margin: 10px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    flex: 1 1 calc(33.33% - 20px);
+    /* Default for portrait mode */
+}
+
+
 
 .product img {
     width: 100%;
@@ -78,52 +112,9 @@ body {
     margin-top: 20px;
 }
 
-#categories-nav {
-    display: flex;
-    /* Enables Flexbox */
-    flex-wrap: wrap;
-    /* Allows items to wrap onto the next line */
-    justify-content: space-evenly;
-    /* Distributes space evenly between items */
-    align-items: center;
-    /* Vertically align items in the center */
-    padding: 10px 0;
-    /* Adds padding above and below the container */
-}
 
-.category {
-    margin: 5px;
-    /* Adds space around each category */
-    padding: 8px 16px;
-    /* Padding inside each category */
-    background-color: #f4f4f4;
-    /* Background color for categories */
-    border-radius: 5px;
-    /* Rounded corners for categories */
-    cursor: pointer;
-    /* Cursor pointer to indicate clickable items */
-    white-space: nowrap;
-    /* Prevents text from wrapping */
-}
 
-#product-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    padding: 5px;
-}
 
-.product {
-    margin: 10px;
-    padding: 10px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    flex: 1 1 calc(33.33% - 20px);
-    /* Default for portrait mode */
-}
 
 @media (max-width: 768px) {
     #product-list, .cart-items {
