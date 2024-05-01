@@ -45,18 +45,21 @@
 
                         <form id="lineselect">
                             <div class="form-group">
-                                <label for="">Select Line</label>
+                                <label for="selectline">Select Line</label>
                                 <select name="line_id" id="selectline" class="form-control form-select">
-
+                                    <!-- Options will be populated here -->
                                 </select>
                             </div>
-
+                        
                             <div class="form-group">
                                 <br>
                                 <input type="submit" class="btn btn-primary" value="Submit">
                             </div>
-
+                        
+                            <!-- Div for displaying messages -->
+                            <div id="message" style="margin-top: 10px;"></div>
                         </form>
+                        
                        
                     </div>
                 </div>
@@ -115,6 +118,45 @@
             select.appendChild(option);
         });
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('lineselect');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent the default form submission
+
+            const formData = new FormData(form);
+            const url = 'https://app.satsweets.com/api/submitline';
+            const messageDiv = document.getElementById('message');
+
+            // Fetch options
+            fetch(url, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`, // Assuming you store the token in localStorage
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Handle success
+                    messageDiv.textContent = 'Successfully updated the line!';
+                    messageDiv.className = 'alert alert-success';
+                } else {
+                    // Handle errors
+                    messageDiv.textContent = data.error || 'An error occurred!';
+                    messageDiv.className = 'alert alert-danger';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                messageDiv.textContent = 'An error occurred during submission!';
+                messageDiv.className = 'alert alert-danger';
+            });
+        });
+    });
+
 
 
     </script>
