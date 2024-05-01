@@ -155,7 +155,7 @@ function addToCart(productId) {
         if (existingProduct) {
             existingProduct.quantity += 1;
         } else {
-            cart.push({...product, quantity: 1});
+            cart.unshift({...product, quantity: 1});
         }
         displayCart();
     };
