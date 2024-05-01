@@ -117,8 +117,13 @@ body {
 
 
 @media (max-width: 768px) {
-    #product-list, .cart-items {
+    #product-list {
         max-height: 400px;
+        overflow-y: scroll;
+    }
+
+    .cart-items {
+        max-height: 200px;
         overflow-y: scroll;
     }
 }
