@@ -4,18 +4,14 @@ const urlsToCache = [
     'https://pwa.satsweets.com/index.html',
     'https://pwa.satsweets.com/dashboard.html',
     'https://pwa.satsweets.com/pos.html',
-    'https://pwa.satsweets.com/style21.css',
-    'https://pwa.satsweets.com/select2.min.css',
+    'https://pwa.satsweets.com/style.css',
     'https://pwa.satsweets.com/auth.js',
-    'https://pwa.satsweets.com/dba12.js',
+    'https://pwa.satsweets.com/db.js',
     'https://pwa.satsweets.com/app.js',
-    'https://pwa.satsweets.com/select2.min.js',
-    'https://pwa.satsweets.com/jquery.min.js',
     'https://pwa.satsweets.com/manifest.json',
     'https://pwa.satsweets.com/assets/css/bootstrap.min.css',
     'https://pwa.satsweets.com/assets/js/bootstrap.bundle.min.js',
-    'https://pwa.satsweets.com/logo.png',
-    'https://pwa.satsweets.com/favicon.png'
+    'https://pwa.satsweets.com/logo.png'
 ];
 
 self.addEventListener('install', event => {
@@ -28,35 +24,20 @@ self.addEventListener('install', event => {
     );
 });
 
-let authToken = null;
-
-self.addEventListener('message', event => {
-    if (event.data && event.data.type === 'SET_TOKEN') {
-        authToken = event.data.token;
-    }
-});
-
 self.addEventListener('fetch', event => {
     const requestUrl = new URL(event.request.url);
 
+    // Define a strategy for caching product thumbnails
     if (requestUrl.origin === 'https://app.satsweets.com' && requestUrl.pathname.startsWith('/storage/')) {
         event.respondWith(
             caches.match(event.request).then(cachedResponse => {
                 if (cachedResponse) {
+                    // If the image is already cached, return it
                     return cachedResponse;
                 }
 
-                const headers = new Headers(event.request.headers);
-                if (authToken) {
-                    headers.append('Authorization', `Bearer ${authToken}`);
-                }
-
-                const modifiedRequest = new Request(event.request, {
-                    mode: 'cors',
-                    headers: headers
-                });
-
-                return fetch(modifiedRequest).then(response => {
+                // Otherwise, fetch the image with CORS, cache it, and return it
+                return fetch(event.request, { mode: 'cors' }).then(response => {
                     return caches.open(CACHE_NAME).then(cache => {
                         cache.put(event.request, response.clone());
                         return response;
@@ -65,23 +46,14 @@ self.addEventListener('fetch', event => {
             })
         );
     } else {
-        const headers = new Headers(event.request.headers);
-        if (authToken) {
-            headers.append('Authorization', `Bearer ${authToken}`);
-        }
-
-        const modifiedRequest = new Request(event.request, {
-            headers: headers
-        });
-
+        // For other requests, try to fetch from network first, then fallback to cache
         event.respondWith(
-            fetch(modifiedRequest).catch(() => {
+            fetch(event.request).catch(() => {
                 return caches.match(event.request);
             })
         );
     }
 });
-
 
 self.addEventListener('activate', event => {
     var cacheAllowlist = [CACHE_NAME];
