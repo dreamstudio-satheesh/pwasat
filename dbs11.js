@@ -251,6 +251,7 @@ function updateQuantity(input, productId) {
     if (isNaN(newQuantity) || newQuantity < 1) {
         console.error("Invalid quantity");
         displayCart();  // Reset to previous valid state
+        updateCartTotal();
         return;
     }
 
