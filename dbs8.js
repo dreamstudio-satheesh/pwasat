@@ -167,25 +167,24 @@ function addToCart(productId) {
 
 function displayCart() {
     const cartItemsDiv = document.querySelector(".cart-items");
-    // Ensure cartItemsDiv exists before attempting to modify it
     if (cartItemsDiv) {
         cartItemsDiv.innerHTML = cart.map(item => `
-            <div class="cart-item" data-product-id="${item.id}">
+            <div class="cart-item">
                 <div class="cart-item-details">
                     <span class="item-name">${item.name} ₹${item.price}</span>
                 </div>
                 <div class="quantity-controls">
                     <button class="btn btn-sm" onclick="decreaseQuantity('${item.id}')">-</button>
-                    <input type="number" style="width:60px;" class="form-control input-sm" value="${item.quantity}" readonly>
+                    <input type="number" style="width:60px;" class="form-control input-sm" 
+                           value="${item.quantity}" min="1" 
+                           onchange="updateQuantity(this, '${item.id}')">
                     <button class="btn btn-sm" onclick="increaseQuantity('${item.id}')">+</button>
                 </div>
             </div>
         `).join('');
-
-        // Attach swipe event listeners after updating the HTML
-        attachSwipeEvents();
     }
 }
+
 
 function increaseQuantity(productId) {
     console.log("Increasing quantity for product ID:", productId);
@@ -217,33 +216,19 @@ function decreaseQuantity(productId) {
 
 
 
-function attachSwipeEvents() {
-    document.querySelectorAll('.cart-item').forEach(item => {
-        let touchstartX = 0;
-        let touchendX = 0;
+function updateQuantity(input, productId) {
+    const newQuantity = parseInt(input.value, 10);
+    if (isNaN(newQuantity) || newQuantity < 1) {
+        console.error("Invalid quantity");
+        displayCart(); // Reset to previous valid state
+        return;
+    }
 
-        item.addEventListener('touchstart', e => {
-            touchstartX = e.changedTouches[0].screenX;
-        });
-
-        item.addEventListener('touchend', e => {
-            touchendX = e.changedTouches[0].screenX;
-            handleSwipeGesture(touchstartX, touchendX, item);
-        });
-    });
-}
-
-function handleSwipeGesture(startX, endX, item) {
-    const swipeThreshold = 50; // Minimum distance for a swipe gesture
-    if (endX - startX > swipeThreshold) { // Detect swipe right
-        const productId = item.dataset.productId;
-        removeItemFromCart(productId);
+    const product = cart.find(item => item.id === productId);
+    if (product) {
+        product.quantity = newQuantity;
+        displayCart(); // Refresh the display with updated quantities
+    } else {
+        console.error("Product not found");
     }
 }
-
-function removeItemFromCart(productId) {
-    cart = cart.filter(item => item.id !== productId); // Remove the item from the cart array
-    displayCart(); // Refresh the display
-}
-
-
