@@ -106,7 +106,7 @@ function getAndDisplayProducts(categoryId) {
 
 // Initialization
 window.onload = function () {
-    const request = indexedDB.open("satDB", 5);
+    const request = indexedDB.open("satDB", 6);
 
     request.onupgradeneeded = function (event) {
         const dbUpgrade = event.target.result;
