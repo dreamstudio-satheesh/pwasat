@@ -213,7 +213,7 @@ function decreaseQuantity(productId) {
 
 function updateQuantity(input, productId) {
     const newQuantity = parseInt(input.value, 10);
-    const product = cart.find(item => item.id === productId);
+    const product = cart.find(item => item.id === parseInt(productId, 10));
     if (product) {
         product.quantity = newQuantity;
         displayCart();  // Update the cart display
