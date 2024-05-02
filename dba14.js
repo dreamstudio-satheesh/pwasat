@@ -282,18 +282,17 @@ function checkout() {
         customer_id: document.querySelector(".customerslist select").value,
         invoice_date: document.getElementById('invoiceDate').value,
         cartlist: cart.map(item => ({
-            code: item.code,  // Assuming each product has a 'code' attribute
+            code: item.code,
             name: item.name,
             price: item.price,
-            gst: item.gst,  // Assuming there's a GST value in the product details
-            hsncode: item.hsncode,  // Assuming there's an HSN code in the product details
+            gst: item.gst,
+            hsncode: item.hsncode,
             quantity: item.quantity,
             total: item.quantity * item.price
         })),
         total: cart.reduce((sum, item) => sum + (item.quantity * item.price), 0)
     };
 
-    // Make sure there are items in the cart and a customer selected
     if (!invoiceData.cartlist.length) {
         alert("Your cart is empty!");
         return;
@@ -304,33 +303,122 @@ function checkout() {
         return;
     }
 
-    // AJAX request to the server
+    // Check if online
+    if (navigator.onLine) {
+        postInvoiceOnline(invoiceData);
+    } else {
+        storeInvoiceOffline(invoiceData);
+        alert("You are offline. Invoice saved locally and will be posted when online.");
+    }
+}
+
+// Modify postInvoiceOnline to accept a callback function
+function postInvoiceOnline(invoiceData, attempts = 1, onSuccessCallback = null) {
     fetch('https://app.satsweets.com/api/postinvoice', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem("token")}`  // Include the authorization token if needed
+            'Authorization': `Bearer ${localStorage.getItem("token")}`
         },
         body: JSON.stringify(invoiceData)
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Network response was not OK');
+            throw new Error(`Network response was not OK. Status: ${response.status}`);
         }
         return response.json();
     })
     .then(data => {
         console.log('Invoice posted successfully:', data);
-        alert('Invoice has been successfully created!');
-        clearCart();  // Clear the cart after posting
+        if (onSuccessCallback) {
+            onSuccessCallback();
+        }
     })
     .catch(error => {
         console.error('Error posting invoice:', error);
-        alert('Failed to create invoice: ' + error.message);
+        if (attempts < 3) {
+            console.log(`Attempt ${attempts}: Retrying...`);
+            setTimeout(() => postInvoiceOnline(invoiceData, attempts + 1, onSuccessCallback), 2000);
+        } else {
+            alert('Failed to create invoice after several attempts: ' + error.message);
+        }
     });
+}
+
+
+
+function storeInvoiceOffline(invoiceData) {
+    const dbRequest = indexedDB.open('InvoicesDB', 1);
+
+    dbRequest.onupgradeneeded = function(event) {
+        var db = event.target.result;
+        var store = db.createObjectStore('invoices', {keyPath: 'id', autoIncrement: true});
+        store.createIndex('by_customer', 'customer_id');
+    };
+
+    dbRequest.onsuccess = function(event) {
+        var db = event.target.result;
+        var transaction = db.transaction('invoices', 'readwrite');
+        var store = transaction.objectStore('invoices');
+        store.add(invoiceData);
+    };
+
+    dbRequest.onerror = function(event) {
+        console.error('Error opening IndexedDB:', event);
+    };
 }
 
 // Add event listener to the checkout button
 document.getElementById('checkout').addEventListener('click', checkout);
 
+
+
+//Handle  if user comes online 
+
+function handleNetworkOnline() {
+    console.log('Network is back online, pushing stored invoices...');
+    pushStoredInvoices();
+}
+
+function pushStoredInvoices() {
+    const dbRequest = indexedDB.open('InvoicesDB', 1);
+    dbRequest.onsuccess = function(event) {
+        var db = event.target.result;
+        var transaction = db.transaction('invoices', 'readonly');
+        var store = transaction.objectStore('invoices');
+        var getAllRequest = store.getAll();
+
+        getAllRequest.onsuccess = function() {
+            const invoices = getAllRequest.result;
+            if (invoices.length > 0) {
+                invoices.forEach(invoice => {
+                    postInvoiceOnline(invoice, 1, () => {
+                        // Callback function to remove the invoice from IndexedDB once successfully posted
+                        removeInvoiceFromDB(invoice.id, db);
+                    });
+                });
+            }
+        };
+    };
+
+    dbRequest.onerror = function(event) {
+        console.error('Error opening IndexedDB:', event);
+    };
+}
+
+function removeInvoiceFromDB(invoiceId, db) {
+    var transaction = db.transaction('invoices', 'readwrite');
+    var store = transaction.objectStore('invoices');
+    store.delete(invoiceId);
+    transaction.oncomplete = function() {
+        console.log(`Invoice ${invoiceId} successfully sent and removed from local storage.`);
+    };
+    transaction.onerror = function(event) {
+        console.error('Error removing invoice from IndexedDB:', event);
+    };
+}
+
+
+// Event listener for coming online
+window.addEventListener('online', handleNetworkOnline);
