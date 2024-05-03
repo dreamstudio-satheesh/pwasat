@@ -4,7 +4,7 @@ const urlsToCache = [
     'https://mob.satsweets.com/index.html',
     'https://mob.satsweets.com/dashboard.html',
     'https://mob.satsweets.com/pos.html',
-    'https://mob.satsweets.com/style22.css',
+    'https://mob.satsweets.com/style.css',
     'https://mob.satsweets.com/auth.js',
     'https://mob.satsweets.com/db.js',
     'https://mob.satsweets.com/app.js',
