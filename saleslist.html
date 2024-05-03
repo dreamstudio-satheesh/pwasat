@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style21.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Dashboard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pos.html">POS</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="selectline.html">Line Settings</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="javascript:logout()">Logout</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1 class="mb-4">Sales List</h1>
+        <table id="salesListTable" class="table table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Customer Name</th>
+                    <th>Invoice Number</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Biller</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be loaded here by DataTables -->
+            </tbody>
+        </table>
+    </div>
+
+
+    <script src="auth.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#salesListTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "https://app.satsweets.com/api/saleslist",
+                    "type": "GET",
+                    "dataSrc": "data",
+                    "beforeSend": function(request) {
+                        request.setRequestHeader("Authorization",
+                            `Bearer ${localStorage.getItem("token")}`);
+                        request.setRequestHeader("Accept", "application/json");
+                        request.setRequestHeader("Content-Type", "application/json");
+                    }
+                },
+                "columns": [{
+                        "data": "date"
+                    },
+                    {
+                        "data": "customer.name",
+                        "defaultContent": ""
+                    },
+                    {
+                        "data": "invoice_number"
+                    },
+                    {
+                        "data": "status"
+                    },
+                    {
+                        "data": "total"
+                    },
+                    {
+                        "data": "user.name",
+                        "defaultContent": "Unknown"
+                    },
+                    {
+                        "data": "created_at"
+                    }
+                ],
+                "columnDefs": [{
+                    "targets": [1,
+                    5], // Assumes the customer name and biller might have nested data issues
+                    "render": function(data, type, row) {
+                        return data ? data : 'Not available'; // Handle missing data gracefully
+                    }
+                }]
+            });
+        });
+    </script>
+</body>
+
+</html>
