@@ -8,6 +8,12 @@
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style21.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+    <style>
+        .table-responsive {
+            overflow-x: auto; // Ensures horizontal scrolling
+            -webkit-overflow-scrolling: touch; // Improves scrolling on touch devices
+        }
+    </style>
 </head>
 
 <body>
@@ -46,23 +52,26 @@
 
     <div class="container mt-4">
         <h1 class="mb-4">Sales List</h1>
-        <table id="salesListTable" class="table table-striped" style="width:100%">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Customer Name</th>
-                    <th>Invoice Number</th>
-                    <th>Status</th>
-                    <th>Total</th>
-                    <th>Biller</th>
-                    <th>Created At</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Data will be loaded here by DataTables -->
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table id="salesListTable" class="table table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Customer Name</th>
+                        <th>Invoice Number</th>
+                        <th>Status</th>
+                        <th>Total</th>
+                        <th>Biller</th>
+                        <th>Created At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be loaded here by DataTables -->
+                </tbody>
+            </table>
+        </div>
     </div>
+
 
 
     <script src="auth.js"></script>
@@ -86,33 +95,40 @@
                         request.setRequestHeader("Content-Type", "application/json");
                     }
                 },
+                "scrollX": true, // Enables horizontal scrolling
                 "columns": [{
-                        "data": "date"
+                        "data": "date",
+                        "width": "10%"
                     },
                     {
                         "data": "customer.name",
-                        "defaultContent": ""
+                        "width": "20%"
                     },
                     {
-                        "data": "invoice_number"
+                        "data": "invoice_number",
+                        "width": "15%"
                     },
                     {
-                        "data": "status"
+                        "data": "status",
+                        "width": "10%"
                     },
                     {
-                        "data": "total"
+                        "data": "total",
+                        "width": "10%"
                     },
                     {
                         "data": "user.name",
-                        "defaultContent": "Unknown"
+                        "width": "15%"
                     },
                     {
-                        "data": "created_at"
+                        "data": "created_at",
+                        "width": "20%"
                     }
                 ],
                 "columnDefs": [{
                     "targets": [1,
-                    5], // Assumes the customer name and biller might have nested data issues
+                        5
+                    ], // Assumes the customer name and biller might have nested data issues
                     "render": function(data, type, row) {
                         return data ? data : 'Not available'; // Handle missing data gracefully
                     }
