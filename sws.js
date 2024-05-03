@@ -37,7 +37,7 @@ self.addEventListener('fetch', event => {
                 }
 
                 // Otherwise, fetch the image with CORS, cache it, and return it
-                return fetch(event.request, { mode: 'cors' }).then(response => {
+                return fetch(event.request, { mode: 'no-cors' }).then(response => {
                     return caches.open(CACHE_NAME).then(cache => {
                         cache.put(event.request, response.clone());
                         return response;
