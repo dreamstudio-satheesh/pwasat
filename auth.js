@@ -1,6 +1,6 @@
 // Check if user is logged in
-function checkLogin() {
-    const token = localStorage.getItem('token');
+async function checkLogin() {
+    const token = await getToken();  // Get token from IndexedDB
     if (!token) {
         // If no token is found, redirect to the login page
         window.location.href = '/login.html'; // Adjust the path as necessary
@@ -11,21 +11,61 @@ function checkLogin() {
 // Run checkLogin when the document loads
 document.addEventListener('DOMContentLoaded', checkLogin);
 
+// Logout function
+async function logout() {
+    // Clear user session/token from IndexedDB
+    await clearToken(); // Clears the token from IndexedDB
 
-
-function logout() {
-    // Clear user session/token from local storage or cookies
-    localStorage.removeItem('token'); // Assuming you store a token named 'token'
-    
-   /*  clearIndexedDB(); */
+     /*  clearIndexedDB(); */
 
     // Redirect to login page or home page
     window.location.href = 'login.html'; // Change '/login.html' to your login page URL
 }
 
+// Function to clear the token from IndexedDB
+async function clearToken() {
+    const db = await new Promise((resolve, reject) => {
+        const openRequest = indexedDB.open("satDB", 8);
+        openRequest.onerror = () => reject(openRequest.error);
+        openRequest.onsuccess = () => resolve(openRequest.result);
+    });
+
+    const transaction = db.transaction('auth', 'readwrite');
+    const store = transaction.objectStore('auth');
+    const clearRequest = store.clear();
+
+    return new Promise((resolve, reject) => {
+        clearRequest.onerror = () => reject(clearRequest.error);
+        clearRequest.onsuccess = () => {
+            console.log('Token cleared.');
+            resolve();
+        };
+    });
+}
+
+// Function to retrieve the token from IndexedDB
+async function getToken() {
+    const db = await new Promise((resolve, reject) => {
+        const openRequest = indexedDB.open("satDB", 8);
+        openRequest.onerror = () => reject(openRequest.error);
+        openRequest.onsuccess = () => resolve(openRequest.result);
+    });
+
+    const transaction = db.transaction('auth', 'readonly');
+    const store = transaction.objectStore('auth');
+    const getRequest = store.get('token');
+
+    return new Promise((resolve, reject) => {
+        getRequest.onerror = () => reject(getRequest.error);
+        getRequest.onsuccess = () => {
+            resolve(getRequest.result ? getRequest.result.value : null);
+        };
+    });
+}
+
 
 function clearIndexedDB() {
-    var dbRequest = indexedDB.open('satDB', 7);
+    var dbRequest = indexedDB.open('satDB', 8);
 
     dbRequest.onsuccess = function(event) {
         var db = event.target.result;
