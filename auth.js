@@ -22,12 +22,46 @@ async function logout() {
     window.location.href = 'login.html'; // Change '/login.html' to your login page URL
 }
 
+// Function to retrieve the token from IndexedDB
+async function getToken() {
+    const db = await new Promise((resolve, reject) => {
+        const openRequest = indexedDB.open("appSAT", 1);
+        openRequest.onerror = () => reject(openRequest.error);
+        openRequest.onsuccess = () => resolve(openRequest.result);
+        // Ensure 'auth' store exists
+        openRequest.onupgradeneeded = (event) => {
+            let db = event.target.result;
+            if (!db.objectStoreNames.contains('auth')) {
+                db.createObjectStore('auth');
+            }
+        };
+    });
+
+    const transaction = db.transaction('auth', 'readonly');
+    const store = transaction.objectStore('auth');
+    const getRequest = store.get('token');
+
+    return new Promise((resolve, reject) => {
+        getRequest.onerror = () => reject(getRequest.error);
+        getRequest.onsuccess = () => {
+            resolve(getRequest.result ? getRequest.result.value : null);
+        };
+    });
+}
+
 // Function to clear the token from IndexedDB
 async function clearToken() {
     const db = await new Promise((resolve, reject) => {
         const openRequest = indexedDB.open("appSAT", 1);
         openRequest.onerror = () => reject(openRequest.error);
         openRequest.onsuccess = () => resolve(openRequest.result);
+        // Ensure 'auth' store exists
+        openRequest.onupgradeneeded = (event) => {
+            let db = event.target.result;
+            if (!db.objectStoreNames.contains('auth')) {
+                db.createObjectStore('auth');
+            }
+        };
     });
 
     const transaction = db.transaction('auth', 'readwrite');
@@ -39,26 +73,6 @@ async function clearToken() {
         clearRequest.onsuccess = () => {
             console.log('Token cleared.');
             resolve();
-        };
-    });
-}
-
-// Function to retrieve the token from IndexedDB
-async function getToken() {
-    const db = await new Promise((resolve, reject) => {
-        const openRequest = indexedDB.open("appSAT", 1);
-        openRequest.onerror = () => reject(openRequest.error);
-        openRequest.onsuccess = () => resolve(openRequest.result);
-    });
-
-    const transaction = db.transaction('auth', 'readonly');
-    const store = transaction.objectStore('auth');
-    const getRequest = store.get('token');
-
-    return new Promise((resolve, reject) => {
-        getRequest.onerror = () => reject(getRequest.error);
-        getRequest.onsuccess = () => {
-            resolve(getRequest.result ? getRequest.result.value : null);
         };
     });
 }
