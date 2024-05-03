@@ -1,12 +1,12 @@
 // sw.js
-const CACHE_NAME = 'v2.4';
+const CACHE_NAME = 'v2.5';
 const urlsToCache = [
     'https://pwa.satsweets.com/index.html',
     'https://pwa.satsweets.com/dashboard.html',
     'https://pwa.satsweets.com/pos.html',
-    'https://pwa.satsweets.com/style21.css',
+    'https://pwa.satsweets.com/style22.css',
     'https://pwa.satsweets.com/auth.js',
-    'https://pwa.satsweets.com/dba15.js',
+    'https://pwa.satsweets.com/dba16.js',
     'https://pwa.satsweets.com/app.js',
     'https://pwa.satsweets.com/manifest.json',
     'https://pwa.satsweets.com/assets/css/bootstrap.min.css',
