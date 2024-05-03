@@ -63,6 +63,7 @@
                         <th>Total</th>
                         <th>Biller</th>
                         <th>Created</th>
+                        <th>view</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -131,6 +132,14 @@
                         "render": function(data, type, row) {
                             return data ? moment(data).format('ddd hh:mm A') : '';
                         }
+                    },
+                    {
+                        "data": "id", // Assuming 'id' is the unique identifier for invoices
+                        "render": function(data, type, row) {
+                            return '<a href="https://app.satsweets.com/invoice/' + data +
+                                '" target="_blank">View Invoice</a>';
+                        },
+                        "orderable": false // This column should not be sortable
                     }
                 ],
                 "columnDefs": [{
