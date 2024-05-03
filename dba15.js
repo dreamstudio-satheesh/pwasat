@@ -305,12 +305,19 @@ function checkout() {
 
     // Check if online
     if (navigator.onLine) {
-        postInvoiceOnline(invoiceData);
+        postInvoiceOnline(invoiceData, 1, redirectToSalesList);
     } else {
         storeInvoiceOffline(invoiceData);
         alert("You are offline. Invoice saved locally and will be posted when online.");
     }
 }
+
+
+function redirectToSalesList() {
+    window.location.href = '/saleslist.html'; // Adjust the path as necessary
+}
+
+
 
 // Modify postInvoiceOnline to accept a callback function
 function postInvoiceOnline(invoiceData, attempts = 1, onSuccessCallback = null) {
