@@ -25,34 +25,17 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('fetch', event => {
-    const requestUrl = new URL(event.request.url);
-
-    // Define a strategy for caching product thumbnails
-    if (requestUrl.origin === 'https://app.satsweets.com' && requestUrl.pathname.startsWith('/storage/')) {
-        event.respondWith(
-            caches.match(event.request).then(cachedResponse => {
-                if (cachedResponse) {
-                    // If the image is already cached, return it
-                    return cachedResponse;
+    event.respondWith(
+        caches.match(event.request)
+            .then(response => {
+                // Cache hit - return response
+                if (response) {
+                    return response;
                 }
-
-                // Otherwise, fetch the image with CORS, cache it, and return it
-                return fetch(event.request, { mode: 'cors' }).then(response => {
-                    return caches.open(CACHE_NAME).then(cache => {
-                        cache.put(event.request, response.clone());
-                        return response;
-                    });
-                });
-            })
-        );
-    } else {
-        // For other requests, try to fetch from network first, then fallback to cache
-        event.respondWith(
-            fetch(event.request).catch(() => {
-                return caches.match(event.request);
-            })
-        );
-    }
+                return fetch(event.request);
+            }
+        )
+    );
 });
 
 self.addEventListener('activate', event => {
