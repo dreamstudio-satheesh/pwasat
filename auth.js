@@ -25,7 +25,7 @@ function logout() {
 
 
 function clearIndexedDB() {
-    var dbRequest = indexedDB.open('satDB', 7);
+    var dbRequest = indexedDB.open('mobsatDB', 1);
 
     dbRequest.onsuccess = function(event) {
         var db = event.target.result;

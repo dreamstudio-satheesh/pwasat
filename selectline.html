@@ -73,7 +73,7 @@
         </div>
     </div>
 
-    <script src="autha.js"></script>
+    <script src="auth.js"></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -163,7 +163,7 @@
     });
 
     function clearCustomerData() {
-        var request = indexedDB.open("satDB", 8);  // Open IndexedDB
+        var request = indexedDB.open("mobsatDB",1);  // Open IndexedDB
 
         request.onerror = function(event) {
             console.error("Database error: " + event.target.errorCode);

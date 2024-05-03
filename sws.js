@@ -1,17 +1,17 @@
 // sw.js
 const CACHE_NAME = 'v2.5';
 const urlsToCache = [
-    'https://pwa.satsweets.com/index.html',
-    'https://pwa.satsweets.com/dashboard.html',
-    'https://pwa.satsweets.com/pos.html',
-    'https://pwa.satsweets.com/style22.css',
-    'https://pwa.satsweets.com/autha.js',
-    'https://pwa.satsweets.com/dba16.js',
-    'https://pwa.satsweets.com/appa.js',
-    'https://pwa.satsweets.com/manifest.json',
-    'https://pwa.satsweets.com/assets/css/bootstrap.min.css',
-    'https://pwa.satsweets.com/assets/js/bootstrap.bundle.min.js',
-    'https://pwa.satsweets.com/logo.png'
+    'https://mob.satsweets.com/index.html',
+    'https://mob.satsweets.com/dashboard.html',
+    'https://mob.satsweets.com/pos.html',
+    'https://mob.satsweets.com/style22.css',
+    'https://mob.satsweets.com/auth.js',
+    'https://mob.satsweets.com/db.js',
+    'https://mob.satsweets.com/app.js',
+    'https://mob.satsweets.com/manifest.json',
+    'https://mob.satsweets.com/assets/css/bootstrap.min.css',
+    'https://mob.satsweets.com/assets/js/bootstrap.bundle.min.js',
+    'https://mob.satsweets.com/logo.png'
 ];
 
 self.addEventListener('install', event => {
