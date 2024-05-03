@@ -25,7 +25,7 @@ async function logout() {
 // Function to clear the token from IndexedDB
 async function clearToken() {
     const db = await new Promise((resolve, reject) => {
-        const openRequest = indexedDB.open("satDB", 8);
+        const openRequest = indexedDB.open("appSAT", 1);
         openRequest.onerror = () => reject(openRequest.error);
         openRequest.onsuccess = () => resolve(openRequest.result);
     });
@@ -46,7 +46,7 @@ async function clearToken() {
 // Function to retrieve the token from IndexedDB
 async function getToken() {
     const db = await new Promise((resolve, reject) => {
-        const openRequest = indexedDB.open("satDB", 8);
+        const openRequest = indexedDB.open("appSAT", 1);
         openRequest.onerror = () => reject(openRequest.error);
         openRequest.onsuccess = () => resolve(openRequest.result);
     });
@@ -65,7 +65,7 @@ async function getToken() {
 
 
 function clearIndexedDB() {
-    var dbRequest = indexedDB.open('satDB', 8);
+    var dbRequest = indexedDB.open('appSAT', 1);
 
     dbRequest.onsuccess = function(event) {
         var db = event.target.result;

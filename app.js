@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-const dbRequest = indexedDB.open("satDB", 8);
+const dbRequest = indexedDB.open("appSAT", 1);
 
 dbRequest.onupgradeneeded = function(event) {
     const db = event.target.result;
@@ -37,7 +37,7 @@ dbRequest.onerror = function(event) {
 
 async function saveToken(token) {
     const db = await new Promise((resolve, reject) => {
-        const openRequest = indexedDB.open("satDB", 8);
+        const openRequest = indexedDB.open("appSAT", 1);
         openRequest.onerror = () => reject(openRequest.error);
         openRequest.onsuccess = () => resolve(openRequest.result);
     });
