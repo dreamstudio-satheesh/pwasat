@@ -6,7 +6,7 @@ const urlsToCache = [
     'https://pwa.satsweets.com/login.html',
     'https://pwa.satsweets.com/pos.html',
     'https://pwa.satsweets.com/style22.css',
-    'https://pwa.satsweets.com/auth.js',
+    'https://pwa.satsweets.com/auth1.js',
     'https://pwa.satsweets.com/dba17.js',
     'https://pwa.satsweets.com/app.js',
     'https://pwa.satsweets.com/manifest.json',
