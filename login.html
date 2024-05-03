@@ -41,10 +41,15 @@
     </div>
 
     <script>
-        // Check if the token exists in localStorage
-        if (localStorage.getItem('token')) {
-            window.location.href = 'pos.html'; // Redirect to dashboard if token is found
+        // Check if the token exists in local DB
+
+        const token = await getToken();  // Get token from IndexedDB
+        if (token) {
+            
+            window.location.href = '/pos.html'; //Redirect to pos page
         }
+
+       
     </script>
     
     <script src="assets/js/bootstrap.bundle.min.js"></script>
