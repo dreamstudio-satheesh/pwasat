@@ -3,6 +3,9 @@ document.getElementById('invoiceDate').valueAsDate = new Date();
 // Global variable to hold the database connection
 let db;
 
+let selectedCategoryId = null;
+
+
 // Function to handle IndexedDB requests
 function handleIDBRequest(request, onSuccess, onError) {
     request.onsuccess = function (event) {
@@ -57,12 +60,23 @@ function displayCategories(categories) {
         const categoryDiv = document.createElement("div");
         categoryDiv.className = "category";
         categoryDiv.textContent = category.name;
+
+        // Highlight the selected category
+        if (selectedCategoryId === category.id) {
+            categoryDiv.style.backgroundColor = "lightblue"; // or any color you prefer
+        } else {
+            categoryDiv.style.backgroundColor = ""; // Default background
+        }
+
         categoryDiv.onclick = function() {
+            selectedCategoryId = category.id; // Update the selected category ID
             getAndDisplayProducts(category.id);
+            displayCategories(categories); // Redraw the categories with the new selection
         };
         categoriesNav.appendChild(categoryDiv);
     });
 }
+
 
 function displayProducts(products) {
     const productList = document.getElementById("product-list");
