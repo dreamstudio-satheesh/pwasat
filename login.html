@@ -46,15 +46,13 @@
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="app.js"></script>
     <script>
-        // Check if the token exists in local DB
-
-        const token = await getToken(); // Get token from IndexedDB
-        if (token) {
-
-            window.location.href = '/pos.html'; //Redirect to pos page
-        }
-
-
+        (async function() { // Immediately Invoked Async Function Expression (IIAFE)
+            // Check if the token exists in local DB
+            const token = await getToken(); // Get token from IndexedDB
+            if (token) {
+                window.location.href = '/pos.html'; //Redirect to pos page
+            }
+        })();
 
         // Function to retrieve the token from IndexedDB
         async function getToken() {
