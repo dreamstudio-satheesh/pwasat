@@ -16,14 +16,14 @@
             });
         }
     </script>
-    
+
 </head>
 
 <body>
     <!-- Categories Navbar -->
     <nav class="category-list shadow-sm">
         <div class="container">
-          
+
             <div class="d-flex flex-row overflow-auto">
                 <!-- Add categories here -->
                 <div id="categories-nav" class="container-fluid"></div>
@@ -61,25 +61,26 @@
                                 <select class="form-select">
                                 </select>
                             </div>
-                           
+
                         </div>
 
                         <div class="col-md-6 col-sm-12">
-                            <input type="date" id="invoiceDate" class="form-control input-sm" placeholder="Invoice Date">
+                            <input type="date" id="invoiceDate" class="form-control input-sm"
+                                placeholder="Invoice Date">
                         </div>
 
                     </div>
-                    
 
-                   
+
+
                     <!-- Cart Items -->
                     <div class="cart-items">
-                       
+
                     </div>
                     <div class="cart-total">
                         <h5>Total: ₹00.00</h5>
                     </div>
-                    
+
                     <div class="cart-actions d-flex justify-content-between">
                         <a href="dashboard.html" class="btn btn-info">Dashboard</a>
 
@@ -100,7 +101,7 @@
     <script src="auth.js"></script>
     <script src="db1.js"></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <script src="jquery.min.js"></script>  <!-- Select2 depends on jQuery -->
+    <script src="jquery.min.js"></script> <!-- Select2 depends on jQuery -->
     <script src="select2.min.js"></script>
     <script>
         $(document).ready(function() {
@@ -112,10 +113,10 @@
 
         function displayCustomers(customers) {
             const customerSelect = document.querySelector(".customerslist select");
-            
+
             // Clear existing options
             customerSelect.innerHTML = "";
-            
+
             // Optionally, add a placeholder as the first empty option
             customerSelect.appendChild(new Option("Choose Customer...", ""));
 
@@ -123,15 +124,23 @@
             customers.forEach(customer => {
                 customerSelect.appendChild(new Option(customer.name, customer.id));
             });
-            
+
+            // Load the stored customer ID from session storage and set it
+            const storedCustomerId = sessionStorage.getItem('selectedCustomerId');
+            if (storedCustomerId) {
+                $(customerSelect).val(storedCustomerId).trigger('change');
+            } else {
+                $(customerSelect).val(null).trigger('change'); // Ensures select2 placeholder shows correctly
+            }
+
             // Update Select2
-            $(customerSelect).select2().trigger('change');
+            $(customerSelect).select2({
+                placeholder: "Select a customer",
+                allowClear: true
+            });
         }
-        
-        
-        
-        </script>
-   
+    </script>
+
 </body>
 
 </html>

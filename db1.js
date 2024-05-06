@@ -164,12 +164,6 @@ window.onload = function () {
          updateCartTotal();
      }
  
-     // Load selected customer and invoice date from session storage
-     const storedCustomerId = sessionStorage.getItem('selectedCustomerId');
-     if (storedCustomerId) {
-         const customerSelect = document.querySelector(".customerslist select");
-         customerSelect.value = storedCustomerId;
-     }
  
      const storedInvoiceDate = sessionStorage.getItem('invoiceDate');
      if (storedInvoiceDate) {
