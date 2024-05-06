@@ -5,6 +5,7 @@ let db;
 
 let selectedCategoryId = null;
 
+
 // Declare cart at the top-level scope of your script
 let cart = [];
 
