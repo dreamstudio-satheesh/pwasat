@@ -177,6 +177,24 @@ function clearCart() {
     
 }
 
+function clearData() {
+    // Clear the cart
+    cart = [];
+    sessionStorage.removeItem('cart');
+    displayCart();
+    updateCartTotal();
+
+    // Reset the customer selection
+    const customerSelect = document.querySelector(".customerslist select");
+    $(customerSelect).val(null).trigger('change');
+    sessionStorage.removeItem('selectedCustomerId');
+
+    // Reset the invoice date
+    document.getElementById('invoiceDate').value = '';
+    sessionStorage.removeItem('invoiceDate');
+}
+
+
 
 function displayCart() {
     const cartItemsDiv = document.querySelector(".cart-items");
@@ -305,14 +323,45 @@ function updateCartTotal() {
 
 
     
-function checkout() {
-    const invoiceDate = document.getElementById('invoiceDate').value;
-    sessionStorage.setItem('invoiceDate', invoiceDate);  // Store invoice date in session storage
-    const customerSelect = document.querySelector(".customerslist select");
-    const customerId = customerSelect.value;
-    sessionStorage.setItem('selectedCustomerId', customerId);  // Store customer ID in session storage
-    // Other checkout logic...
-}
+    function checkout() {
+        // Gather invoice data
+        const invoiceData = {
+            customer_id: document.querySelector(".customerslist select").value,
+            invoice_date: document.getElementById('invoiceDate').value,
+            cartlist: cart.map(item => ({
+                code: item.code,
+                name: item.name,
+                price: item.price,
+                gst: item.gst,
+                hsncode: item.hsncode,
+                quantity: item.quantity,
+                total: item.quantity * item.price
+            })),
+            total: cart.reduce((sum, item) => sum + (item.quantity * item.price), 0)
+        };
+
+        if (!invoiceData.cartlist.length) {
+            alert("Your cart is empty!");
+            return;
+        }
+
+        if (!invoiceData.customer_id) {
+            alert("Please select a customer before checking out.");
+            return;
+        }
+
+        // Check if online
+        if (navigator.onLine) {
+            postInvoiceOnline(invoiceData, 1, redirectToSalesList);
+            clearData();  // Clear all data after successful online posting
+        } else {
+            storeInvoiceOffline(invoiceData);
+            clearData();  // Consider clearing data or leave it until successful online post
+            
+            alert("You are offline. Invoice saved locally and will be posted when online.");
+        }
+    }
+
 
 
 function redirectToSalesList() {
