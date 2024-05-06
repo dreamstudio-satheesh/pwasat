@@ -119,9 +119,29 @@
                 } else {
                     sessionStorage.removeItem(
                         'selectedCustomerId'
-                        ); // Remove the item if there's no selection (e.g., if allowClear is used)
+                    ); // Remove the item if there's no selection (e.g., if allowClear is used)
                 }
             });
+
+
+
+            // Listen for changes in the invoice date input
+            $('#invoiceDate').on('change', function() {
+                var newDate = $(this).val(); // Get the new date value
+                if (newDate) {
+                    sessionStorage.setItem('invoiceDate', newDate); // Store the new date in sessionStorage
+                } else {
+                    sessionStorage.removeItem('invoiceDate'); // Remove the item if the date is cleared
+                }
+            });
+
+            // Optionally, set the date from sessionStorage when the page loads
+            var storedDate = sessionStorage.getItem('invoiceDate');
+            if (storedDate) {
+                $('#invoiceDate').val(storedDate);
+            }
+
+            
         });
 
 
@@ -153,10 +173,6 @@
                 $(customerSelect).val(null).trigger('change'); // Ensures select2 placeholder shows correctly
             }
         }
-
-
-
-        
     </script>
 
 </body>
