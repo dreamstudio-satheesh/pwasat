@@ -109,7 +109,21 @@
                 placeholder: "Select a customer",
                 allowClear: true
             });
+
+            // Listen for select2 selection changes
+            $('.customerslist select').on('select2:select', function(e) {
+                var data = e.params.data;
+                if (data.id) {
+                    sessionStorage.setItem('selectedCustomerId', data
+                        .id); // Store the selected customer ID in sessionStorage
+                } else {
+                    sessionStorage.removeItem(
+                        'selectedCustomerId'
+                        ); // Remove the item if there's no selection (e.g., if allowClear is used)
+                }
+            });
         });
+
 
         function displayCustomers(customers) {
             const customerSelect = document.querySelector(".customerslist select");
@@ -125,6 +139,12 @@
                 customerSelect.appendChild(new Option(customer.name, customer.id));
             });
 
+            // Update Select2
+            $(customerSelect).select2({
+                placeholder: "Select a customer",
+                allowClear: true
+            });
+
             // Load the stored customer ID from session storage and set it
             const storedCustomerId = sessionStorage.getItem('selectedCustomerId');
             if (storedCustomerId) {
@@ -132,13 +152,11 @@
             } else {
                 $(customerSelect).val(null).trigger('change'); // Ensures select2 placeholder shows correctly
             }
-
-            // Update Select2
-            $(customerSelect).select2({
-                placeholder: "Select a customer",
-                allowClear: true
-            });
         }
+
+
+
+        
     </script>
 
 </body>

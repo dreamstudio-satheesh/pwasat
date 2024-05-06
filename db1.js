@@ -165,10 +165,6 @@ window.onload = function () {
      }
  
  
-     const storedInvoiceDate = sessionStorage.getItem('invoiceDate');
-     if (storedInvoiceDate) {
-         document.getElementById('invoiceDate').value = storedInvoiceDate;
-     }
 };
 
 
