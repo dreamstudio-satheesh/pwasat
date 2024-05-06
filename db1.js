@@ -169,15 +169,9 @@ window.onload = function () {
 
 
 
-function clearCart() {
-    cart = []; // Clear the cart array
-    sessionStorage.setItem('cart', JSON.stringify(cart));  // Set cart in session storage to an empty array
-    displayCart();   // Update the cart display
-    updateCartTotal();  // Update the total
-    
-}
 
-function clearData() {
+
+function clearCart() {
     // Clear the cart
     cart = [];
     sessionStorage.removeItem('cart');
@@ -353,11 +347,11 @@ function updateCartTotal() {
         // Check if online
         if (navigator.onLine) {
             postInvoiceOnline(invoiceData, 1, redirectToSalesList);
-            clearData();  // Clear all data after successful online posting
+            clearCart();  // Clear all data after successful online posting
         } else {
             storeInvoiceOffline(invoiceData);
-            clearData();  // Consider clearing data or leave it until successful online post
-            
+            clearCart();  // Consider clearing data or leave it until successful online post
+
             alert("You are offline. Invoice saved locally and will be posted when online.");
         }
     }
