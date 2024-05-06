@@ -150,6 +150,27 @@ window.onload = function () {
     request.onerror = function (event) {
         console.error("Database error: ", event.target.errorCode);
     };
+
+
+     // Load cart from session storage
+     const storedCart = sessionStorage.getItem('cart');
+     if (storedCart) {
+         cart = JSON.parse(storedCart);
+         displayCart();
+         updateCartTotal();
+     }
+ 
+     // Load selected customer and invoice date from session storage
+     const storedCustomerId = sessionStorage.getItem('selectedCustomerId');
+     if (storedCustomerId) {
+         const customerSelect = document.querySelector(".customerslist select");
+         customerSelect.value = storedCustomerId;
+     }
+ 
+     const storedInvoiceDate = sessionStorage.getItem('invoiceDate');
+     if (storedInvoiceDate) {
+         document.getElementById('invoiceDate').value = storedInvoiceDate;
+     }
 };
 
 
